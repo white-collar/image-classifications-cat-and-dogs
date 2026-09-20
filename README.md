@@ -33,7 +33,7 @@ Sure enough, if you check what each directory contains, you'll find a list of jp
 
 ### Train and validation datasets
 
-The reason we need to split our dataset into two parts should be intuitive enough. The core idea of learning is to “**train**” (meaning: calculate some coefficients, which we call weights, as the result of a long sequence of calculations) and then “**validate**” what we obtained. Since we have a fairly large dataset - approximately 12,000 images - we can split it into two parts using an 80/20 proportion: 80% of the files will be copied into one folder, named “train,” and the remaining 20% into another folder, named “validation.”
+The reason we need to split our dataset into two parts should be intuitive enough. The core idea of learning is to “**train**” (meaning: calculate some coefficients, which we call weights, as the result of a long sequence of calculations) and then “**validate**” what we obtained. Since we have a fairly large dataset - approximately 25,000 images (12,500 cats + 12,500 dogs) - we can split it into two parts using an 80/20 proportion: 80% of the files will be copied into one folder, named “train,” and the remaining 20% into another folder, named “validation.”
 
 On my computer, the directory structure looks like this - but the script accounts for the possibility that these directories don't exist yet, so it creates them for you. 
 
