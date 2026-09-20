@@ -1150,7 +1150,7 @@ If you run out script you may to see that in console two strings which on my lap
 `Found 24998 images belonging to 2 classes.
 Found 23652 images belonging to 2 classes.`
 
-The number, which we can see in the first line, is the amount of files, loaded by `train_datagen` and which are stored in `train_generator.samples` . Absolutely the same we can see about the second line, but only for `validation_datagen` . You can put some efforts and count if you want, but in more literal sense it is the number of files on out dataset, in the training and validation datasets correspondingly. And because the our training process will be not the one by one files, but by the some batch, we can easily conclude that the default value of this batch is 20, what exactly we can see in our logs. 
+The number, which we can see in the first line, is the amount of files, loaded by `train_datagen` and which are stored in `train_generator.samples` . Absolutely the same we can see about the second line, but only for `validation_datagen` . You can put some efforts and count if you want, but in more literal sense it is the number of files on out dataset, in the training and validation datasets correspondingly. And because the our training process will be not the one by one files, but by the some batch, we can easily conclude that the batch size is 20, what exactly we can see in our logs - not because Keras defaults to that value (its own default is actually 32), but because we explicitly passed `batch_size=20` to `flow_from_directory()` above. 
 
 So as result we can print out the following values:
 
