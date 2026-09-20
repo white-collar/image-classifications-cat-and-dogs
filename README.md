@@ -904,7 +904,7 @@ If at this moment you catch the though that you don’t understand why exactly w
 
 ### Why do we do this ? Preparation for the training - open the carts
 
-Speaking about the final purpose of our calculation, we’re talking about Image Classification. Or we can rephrase this in the following way - we have ordered our set of pixels of image in some canny way (literally we have 1D-sequence of pixel’s value) and we have to compare what we have as result with what we expect for. So since we have the simple case in terms of classification - binary classification or dogs-cat classification - we can say more certainly our purpose: let’s calculate something overall our pixels of some unknown image and the result we have to compare with the dog.  Or, more concretely, let’s check whether this value is close to dog or whether this value is close to 1. 
+Speaking about the final purpose of our calculation, we’re talking about Image Classification. Or we can rephrase this in the following way - we have ordered our set of pixels of image in some canny way (literally we have 1D-sequence of pixel’s value) and we have to compare what we have as result with what we expect for. So since we have the simple case in terms of classification - binary classification or dogs-cat classification - we can say more certainly our purpose: let’s calculate something overall our pixels of some unknown image and compare the result against our two labels. Remembering that **cats** were assigned **0** and **dogs** were assigned **1**, more concretely, let’s check whether this value is close to 0 (cat) or close to 1 (dog). 
 
 So in every case for every neuron (having these things with the weights and biases) we are able to make such comparison - comparison with 1. 
 
