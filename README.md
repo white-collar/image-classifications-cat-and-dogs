@@ -727,11 +727,11 @@ Conv2D(32, (3, 3), activation='relu', input_shape=(150, 150, 3))
 MaxPooling2D(2, 2)
 ```
 
-gives us (remembering that 150x150 is the size of our images and the gist of MaxPooling is the reducing of out matrix of pixels by some simple computational method described above):
+gives us (remembering that 150x150 is the size of our images). There are actually **two** things shrinking the spatial size here, not one: `Conv2D` itself, and `MaxPooling2D` after it. By default `Conv2D` uses `padding='valid'`, which means it does **not** pad the image before sliding the 3x3 filter over it - a filter centered on the outermost pixels would stick out past the edge, so those positions are simply skipped. For an NxN input and a 3x3 filter this leaves an output of size `(N - 3 + 1) x (N - 3 + 1)`, i.e. 2 pixels smaller per side. Only then does `MaxPooling2D` halve what's left:
 
-**Conv2D**: Applies 32 filters to the input image, producing 32 feature maps.
+**Conv2D**: Applies 32 filters (3x3, no padding) to the 150x150 input image, producing 32 feature maps of size 148x148 (150 − 3 + 1 = 148).
 
-**MaxPooling2D**: Reduces the spatial dimensions of each feature map from 150x150 to 75x75.
+**MaxPooling2D**: Reduces the spatial dimensions of each feature map from 148x148 to 74x74.
 
 **Second pair**
 
@@ -742,9 +742,9 @@ MaxPooling2D(2, 2)
 
 gives us:
 
-**Conv2D**: Applies 64 filters to the 32 (the result of the previous pair’s invocation) feature maps, producing 64 feature maps.
+**Conv2D**: Applies 64 filters to the 32 (the result of the previous pair’s invocation) feature maps, each 74x74, producing 64 feature maps of size 72x72 (74 − 3 + 1 = 72).
 
-**MaxPooling2D**: Reduces the spatial dimensions of each feature map from 75x75 (the result of the previous pair’s invocation) to 37x37.
+**MaxPooling2D**: Reduces the spatial dimensions of each feature map from 72x72 (the result of the previous pair’s invocation) to 36x36.
 
 **Third pair**
 
@@ -753,9 +753,9 @@ Conv2D(128, (3, 3), activation='relu')
 MaxPooling2D(2, 2)
 ```
 
-**Conv2D**: Applies 128 filters to the 64 feature maps, producing 128 feature maps.
+**Conv2D**: Applies 128 filters to the 64 feature maps, each 36x36, producing 128 feature maps of size 34x34 (36 − 3 + 1 = 34).
 
-**MaxPooling2D**: Reduces the spatial dimensions of each feature map from 37x37 to 18x18.
+**MaxPooling2D**: Reduces the spatial dimensions of each feature map from 34x34 to 17x17.
 And at least:
 
 **Fourth pair**
@@ -765,9 +765,9 @@ Conv2D(128, (3, 3), activation='relu')
 MaxPooling2D(2, 2)
 ```
 
-**Conv2D**: Applies 128 filters to the 128 feature maps, producing 128 feature maps.
+**Conv2D**: Applies 128 filters to the 128 feature maps, each 17x17, producing 128 feature maps of size 15x15 (17 − 3 + 1 = 15).
 
-**MaxPooling2D**: Reduces the spatial dimensions of each feature map from 18x18 to 9x9.
+**MaxPooling2D**: Reduces the spatial dimensions of each feature map from 15x15 to 7x7 (15 // 2 = 7 — the one leftover row/column that doesn't make a full 2x2 window is simply dropped).
 
 If you keep looking on the decreasing the size of parameters, which were outputs of `MaxPooling2D` , you can easily detect that it was dwindled drastically, which in turn gives to us the meaningful benefit - the decreasing the size of maps which we process during out learning of neural network. 
 
@@ -775,16 +775,16 @@ If you keep looking on the decreasing the size of parameters, which were outputs
 
 There is good case when the name of the method fully corresponding to what this method does. It really flattens our 2D input (basically images which have been passed through the previous layers) into the 1D output literally. So it means that out next computational procedure will work not with matrix, but with single-row vector. Mathematically we’re talking about concatenation of elements of 2D input to 1D. 
 
-For example in our case of image classification before the invocation of `flatten()` our input will be the **tensor** (9, 9, 128). You can understand this like the following - tensor is the mathematical object, which has **width** and **height,** which are 9 and 9 correspondingly and has third parameter, conditionally named **depth,** which can be attributed like results of computations from the previous steps and this results are the sequence of maps with certain width and height. You can imagine this like **stack** of matrixes with size 9x9 and count of this matrixes in this stack is 128. Or more figural - every 9x9 matrix from these 128 is some “snapshot” of the original image, and every snapshot keeps some unique characteristic of image, which will be applied during image classification. 
+For example in our case of image classification before the invocation of `flatten()` our input will be the **tensor** (7, 7, 128). You can understand this like the following - tensor is the mathematical object, which has **width** and **height,** which are 7 and 7 correspondingly and has third parameter, conditionally named **depth,** which can be attributed like results of computations from the previous steps and this results are the sequence of maps with certain width and height. You can imagine this like **stack** of matrixes with size 7x7 and count of this matrixes in this stack is 128. Or more figural - every 7x7 matrix from these 128 is some “snapshot” of the original image, and every snapshot keeps some unique characteristic of image, which will be applied during image classification. 
 
 Next image of this visualisation is created by the neural network, by the way, but this is absolutely another story.
 
 ![Untitled](Github%20f2c7e7b803134e089c4484d14eb5d863/Untitled%202.png)
 
-So before the `flatten()` will be invoked we have such structure, which is named tensor, and after `flatten()` invoked we have 1D-structure, which is the result of concatenation of 81 items of evert feature map (card on the picture above) and such concatenation block will be repeated 128 times. So it’s easily to calculate that total amount of element in this structure will be 
+So before the `flatten()` will be invoked we have such structure, which is named tensor, and after `flatten()` invoked we have 1D-structure, which is the result of concatenation of 49 items of evert feature map (card on the picture above) and such concatenation block will be repeated 128 times. So it’s easily to calculate that total amount of element in this structure will be 
 
 ```python
-Flattened Shape: (9 * 9 * 128) = (10,368)
+Flattened Shape: (7 * 7 * 128) = (6,272)
 ```
 
 Let me repeat again that all magic of this pretty long image classification procedure in reality is just the sequence of trivial (relatively) calculations. There is absolutely another question **why** this sequence lead us to the required result, but let me leave this out of the scope of this text.
@@ -814,7 +814,7 @@ $$
 
 which as it’s easy to notice that it sets all negative values to zero and leaves positive values unchanged.
 
-Keeping in mind that our input for this case is 1D-structure which contains `10368` items, we will define the **weights** as some numerical characteristic which should be associated with **every** neurons, declared as first parameter of our method. Because we’re talking about every neuron, it means that whole amount of weights will be `10368*512 = **5308416**` 
+Keeping in mind that our input for this case is 1D-structure which contains `6272` items, we will define the **weights** as some numerical characteristic which should be associated with **every** neurons, declared as first parameter of our method. Because we’re talking about every neuron, it means that whole amount of weights will be `6272*512 = **3211264**` 
 
 Also every neuron has his own **bias**. Bias is the characteristic of every neuron as well, so we will be having 512 biases here.
 
@@ -822,7 +822,7 @@ Now we have add more complexity to our computational process, because we have to
 
 $$
 
-z_j = \sum_{i=1}^{10,368} w_{ij} x_i + b_j
+z_j = \sum_{i=1}^{6,272} w_{ij} x_i + b_j
 $$
 
 What do we have here ? 
@@ -837,13 +837,13 @@ $$
 
 The result of our calculation
 
-This is the weight connecting $i$ and $j$ neuron. Don’t forget that our input is the one-dimensional structure, with some values in amount 10368 and with every neuron we have the array of values, named weights, associated with the certain neuron. 
+This is the weight connecting $i$ and $j$ neuron. Don’t forget that our input is the one-dimensional structure, with some values in amount 6272 and with every neuron we have the array of values, named weights, associated with the certain neuron. 
 
  $x_i$ 
 
 ![Screenshot 2024-08-05 at 21.49.15.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-08-05_at_21.49.15.png)
 
-Our input. Basically this is every certain element from out vector with 10368 items.
+Our input. Basically this is every certain element from out vector with 6272 items.
 
  $b_j$                          Bias for  $j$-th neuron
 
@@ -855,7 +855,7 @@ So we have the only one neuron. Let’s get the arrays of weight for it - 3 only
 
 ```python
 np.random.seed(0)  # For reproducibility
-weight_vector = np.random.uniform(-0.05, 0.05, 10368)
+weight_vector = np.random.uniform(-0.05, 0.05, 6272)
 ```
 
 My output looks like that from Google Colab:
@@ -873,7 +873,7 @@ bias = 0.0
 The input data for the procedure - pls, remember, that our real input is from the previous one step. Here is the demonstration. 
 
 ```python
-input_vector = np.random.rand(10368)  # Example input vector
+input_vector = np.random.rand(6272)  # Example input vector
 ```
 
 ![Screenshot 2024-07-11 at 22.07.23.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-07-11_at_22.07.23.png)
@@ -912,9 +912,9 @@ Due to this fact - fact that we the calculated value and some expected value - w
 
 Now let’s consider another one moment. Why, basically, if we have such formula
 
-$z_j = \sum_{i=1}^{10,368} w_{ij} x_i + b_j$ to calculate the output parameter $z_j$  - why do we think at all that some synthetic calculation result  being multiplied and summed up using the set of weights (which are, let me to remind, just small randomly initialised values ) plus bias which is zero at the stage of start  - may give us something, which we should be able to compare with 1 or 0 ? 
+$z_j = \sum_{i=1}^{6,272} w_{ij} x_i + b_j$ to calculate the output parameter $z_j$  - why do we think at all that some synthetic calculation result  being multiplied and summed up using the set of weights (which are, let me to remind, just small randomly initialised values ) plus bias which is zero at the stage of start  - may give us something, which we should be able to compare with 1 or 0 ? 
 
-If you feel perplexity - then you are not the one. If we leave our model as is $z_j = \sum_{i=1}^{10,368} w_{ij} x_i + b_j$ and we will do the calculation only once time - it would be the most futile action in the world. Really. But secret here is that our model has some variable parameters which are weights and some parameter which allow us to say how far or close our result to what we are looking for - I mean bias. And due to this amazing fact we can do something - we can hone our variable parameters in such way - then it will be so close to 1 or zero as far as you wish. Basically this honing is that exactly what the second word in the “Machine Learning” expresses. We’re going to learn our model to make what we’d like to get - we’re going to change weights! 
+If you feel perplexity - then you are not the one. If we leave our model as is $z_j = \sum_{i=1}^{6,272} w_{ij} x_i + b_j$ and we will do the calculation only once time - it would be the most futile action in the world. Really. But secret here is that our model has some variable parameters which are weights and some parameter which allow us to say how far or close our result to what we are looking for - I mean bias. And due to this amazing fact we can do something - we can hone our variable parameters in such way - then it will be so close to 1 or zero as far as you wish. Basically this honing is that exactly what the second word in the “Machine Learning” expresses. We’re going to learn our model to make what we’d like to get - we’re going to change weights! 
 
 So no magic at all! 
 
@@ -974,7 +974,7 @@ So this activation function looks like this:
 
 As you can the the calculated value if $y$ is always less then 1, so we can speak about probability, showing us the likelihood that given  image is dog. 
 
-If you want to see how the visualisation of this last final layer on you own - you can try to execute this code (be careful and tolerant - execution uses real number of neurons - 10368 - so process is not flashlight):
+If you want to see how the visualisation of this last final layer on you own - you can try to execute this code (be careful and tolerant - execution uses real number of neurons - 6272 - so process is not flashlight):
 
 ```python
 import matplotlib.pyplot as plt
@@ -984,7 +984,7 @@ import networkx as nx
 G = nx.Graph()
 
 # Number of neurons in the previous layer
-previous_layer_neurons = 10368
+previous_layer_neurons = 6272
 
 # Add nodes for the previous layer
 for i in range(previous_layer_neurons):
@@ -1065,7 +1065,7 @@ $\text{Binary Crossentropy} = -\frac{1}{N} \sum_{i=1}^N \left[ y_i \log(p_i) + (
 
 `optimizer=Adam(learning_rate=0.001)`  - basically that is what defines the parameters of changing the weights. If you remember, we had been talking about the arrays of weights and biases, which are initialised by some random values, close to zero, or just zero, if we talk about bias exactly. This parameter defines the step of changing weights during training process in order to bring the value of 
 
-$z_j = \sum_{i=1}^{10,368} w_{ij} x_i + b_j$
+$z_j = \sum_{i=1}^{6,272} w_{ij} x_i + b_j$
 
 to be so close to 1 as possible. Adam is **Adaptive Moment Estimation**  is an optimization algorithm that combines the advantages of two other extensions of stochastic gradient descent: AdaGrad and RMSProp. It adapts the learning rate for each parameter.
 
