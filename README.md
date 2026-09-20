@@ -641,7 +641,7 @@ Letâ€™s make element-wise multiplication of our extracted values of pixels (donâ
 = -2
 ```
 
-And obviously the first result of applying our filter is 2.
+And obviously the first result of applying our filter is -2.
 
 Next shift to the right by our filter over our image and we have the extracted values of pixels:
 
