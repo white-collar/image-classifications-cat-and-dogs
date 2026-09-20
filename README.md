@@ -67,6 +67,13 @@ base_dir = "dataset"
 # Create directories
 train_dir = os.path.join(base_dir, "train")
 validation_dir = os.path.join(base_dir, "validation")
+
+# Clear out any previous split before recreating it, so re-running this
+# script doesn't accumulate files on top of an older split or leak the
+# same image into both train and validation across different runs.
+shutil.rmtree(train_dir, ignore_errors=True)
+shutil.rmtree(validation_dir, ignore_errors=True)
+
 os.makedirs(train_dir, exist_ok=True)
 os.makedirs(validation_dir, exist_ok=True)
 
@@ -148,12 +155,17 @@ def is_image_file(filename):
         return False
 ```
 
-Next block of code just create the two folders with hardcoded names: **train** and **validation,** and it does it carefully, doing nothing if you’ve already created such folder. 
+Next block of code just create the two folders with hardcoded names: **train** and **validation.** Before that, it deletes any old **train** and **validation** folders if they already exist - otherwise, re-running the script would copy files on top of an older split, and because the shuffle below has no fixed seed, the same image could end up in **train** on one run and **validation** on another, quietly leaking data between the two sets.
 
 ```python
 # Create directories
 train_dir = os.path.join(base_dir, "train")
 validation_dir = os.path.join(base_dir, "validation")
+
+# Clear out any previous split before recreating it
+shutil.rmtree(train_dir, ignore_errors=True)
+shutil.rmtree(validation_dir, ignore_errors=True)
+
 os.makedirs(train_dir, exist_ok=True)
 os.makedirs(validation_dir, exist_ok=True)
 ```
@@ -1151,6 +1163,8 @@ If you run out script you may to see that in console two strings which on my lap
 Found 23652 images belonging to 2 classes.`
 
 The number, which we can see in the first line, is the amount of files, loaded by `train_datagen` and which are stored in `train_generator.samples` . Absolutely the same we can see about the second line, but only for `validation_datagen` . You can put some efforts and count if you want, but in more literal sense it is the number of files on out dataset, in the training and validation datasets correspondingly. And because the our training process will be not the one by one files, but by the some batch, we can easily conclude that the default value of this batch is 20, what exactly we can see in our logs. 
+
+**A note on the numbers above:** `24998 + 23652 = 48650`, which is almost *double* the roughly 25,000 images (12,500 cats + 12,500 dogs) in the raw dataset, and the ratio between the two (~51/49) doesn't look like the 80/20 split the code performs. This particular log was captured before the split step cleared out `dataset/train` and `dataset/validation` before repopulating them - since those folders weren't cleared, and the shuffle has no fixed seed, running the split more than once let files pile up across runs, and could even let the same image drift into both `train` and `validation` on different runs. With the folders cleared before every run (see the earlier code block), a single clean run should instead give you something close to an actual 80/20 split - roughly 20,000 files in `train` and 5,000 in `validation` for a ~25,000-image dataset.
 
 So as result we can print out the following values:
 

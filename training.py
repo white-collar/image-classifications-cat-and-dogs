@@ -25,6 +25,15 @@ base_dir = 'dataset'
 # Create directories
 train_dir = os.path.join(base_dir, 'train')
 validation_dir = os.path.join(base_dir, 'validation')
+
+# Clear out any previous split before recreating it. Without this, re-running
+# the script (e.g. across experiments) accumulates files on top of the old
+# ones, and since random.shuffle() below has no fixed seed, the same image
+# can land in train on one run and validation on another - leaking data
+# between the two sets and silently inflating validation accuracy.
+shutil.rmtree(train_dir, ignore_errors=True)
+shutil.rmtree(validation_dir, ignore_errors=True)
+
 os.makedirs(train_dir, exist_ok=True)
 os.makedirs(validation_dir, exist_ok=True)
 
