@@ -4,46 +4,46 @@
 
 This readme implies the following ones:
 
-1. You some some experience in development at all, so question like - let’s install Python and additional packages doesn’t make you to be perplexed
-2. You want to feel how such cliche like “neural network” works
-3. You have some preliminary knowledge how it works: it’s about having labeled dataset of what we’re going to classify (in this case: dogs and cat), it’s about process of training (frankly speaking it’s enough to understand that it takes some time), it’s about how to test what we get.
-4. You have at least 3-4 years old notebook. All experiments which described below been done on Macbook Pro M3 Pro with 18 Gb RAM. This information in order to understand the possible expected configuration.
-5. This readme doesn’t makes no claim as being something extraordinary or new. It just reflects the some work of software engineer, which before to hear the academic course about Machine Learning, decided to compile some different texts from Intenet into some manual and get result which might be called as example of Hello World in neural networks.
+1. You have some experience in development, so a question like "let's install Python and some additional packages" doesn't leave you perplexed.
+2. You want to get a feel for how a cliché like "neural network" actually works.
+3. You have some preliminary knowledge of how it works: that it's about having a labeled dataset of what we're going to classify (in this case, dogs and cats), that it's about a training process (it's enough to know that it takes some time), and that it's about testing what you get.
+4. You have at least a 3-4 year old laptop. All the experiments described below were done on a MacBook Pro M3 Pro with 18 GB RAM - this is just so you know what configuration to expect.
+5. This README doesn't claim to be anything extraordinary or new. It simply reflects the work of a software engineer who, before taking an academic course on Machine Learning, decided to compile a few different texts from the Internet into a manual and get a result that could be called a "Hello World" of neural networks.
 6. Python is used here.
 
 ### Result of your work
 
-So after this script will be applied on your local environment you will be able to classify the photos: whether the given image with cat or dog is cat or dog basically. You can download any image from Internet, crop them to the expected size and try to classify it, calling relatively simple Python script.
+So once you've run this script on your local environment, you'll be able to classify photos - telling whether a given image shows a cat or a dog. You can download any image from the Internet, crop it to the expected size, and classify it by calling a fairly simple Python script.
 
 Let’s begin
 
 ### Dataset
 
-Probably you either know or have intuitive feeling how Machine Learning works. In particular, because we’re talking about the image classification, we should have something, using this something our software will learned. Technically under the word “learned” I mean that some set of images will be read by the script, processed in some pretty smart way and a certain combination of pixel, obtained from the sequence of images, will be associated either with cat or dog. It will be possible because someone already did great job: this someone opened the images and put the label to this image, saying this is a cat or dog. Sure, this someone probably is human being (not fully sure, candidly speaking), but this job is drastically important. Our neural network should get to know from somewhere that a certain pixel’s combination is a furry cat or grumpy dog. At least till it will not be injected directly in the brain of this neural network (joke).
+You probably either know, or have an intuitive feeling for, how Machine Learning works. Because we're talking about image classification specifically, we need something for our software to learn from. By "learn" I technically mean: a set of images will be read by the script, processed in some pretty smart way, and certain combinations of pixels, extracted from that sequence of images, will end up associated with either "cat" or "dog." This is only possible because someone already did the hard work: they opened up the images and labeled each one, saying "this is a cat" or "this is a dog." That someone was presumably a human being (not entirely sure, to be honest), but that labeling job is enormously important - our neural network has to learn, from somewhere, that a certain combination of pixels is a furry cat or a grumpy dog. At least until we can inject that knowledge directly into the neural network's "brain" (joke).
 
-So we’re going to download this dataset from here [Cats and Dogs](https://www.microsoft.com/en-us/download/details.aspx?id=54765) . This resource is maintained by Microsoft, the size of zip-archive is about 800 Mb.
+So we're going to download the dataset from here: [Cats and Dogs](https://www.microsoft.com/en-us/download/details.aspx?id=54765). It's hosted by Microsoft, and the zip archive is about 800 MB.
 
-After the archive will be downloaded it makes sense to investigate what we get before using it. So most likely you’ll see something like this: two directory with already classified images and due to which some image is put on we have the possibility to judge what depicted on it.   
+Once the archive is downloaded, it's worth taking a look at what you got before using it. You'll most likely see something like this: two directories of already-classified images, where the directory an image is placed in tells you what's depicted in it.
 
 ![Screenshot 2024-06-23 at 14.56.35.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-06-23_at_14.56.35.png)
 
-Sure, if you check what every directory contains you will the list of jpg-files. At the moment when I’m writing this archive contains 12500 images of cats and dogs of the each. 
+Sure enough, if you check what each directory contains, you'll find a list of jpg files. At the time of writing, the archive contains 12,500 images each of cats and dogs. 
 
-*The snag is that one of these file is broken apparently, but it will be accounted during the writing code of out classification script.* 
+*The snag is that at least one of these files is apparently broken - we'll account for that when we write the classification script.*
 
 ### Train and validation datasets
 
-The reason why we need to split out dataset in two ones might be intuitively acceptable. The core idea of learning is to “**train**” (which means calculate some coefficient which we call as weights as result of the long calculation sequence) and to “**validate**” what we obtained. Since we have the pretty long dataset, which includes approximately 12000 images, we can split this set in two ones on 80% to 20% proportion. It means that 80% files from dataset will be copied in one folder, named “train”, and remaining “20%” will be copied in another folder, named “validation”.
+The reason we need to split our dataset into two parts should be intuitive enough. The core idea of learning is to “**train**” (meaning: calculate some coefficients, which we call weights, as the result of a long sequence of calculations) and then “**validate**” what we obtained. Since we have a fairly large dataset - approximately 12,000 images - we can split it into two parts using an 80/20 proportion: 80% of the files will be copied into one folder, named “train,” and the remaining 20% into another folder, named “validation.”
 
-On my computer the directory’s structure looks like this, but the script keeps in mind that directories might not exist, so we will create them. 
+On my computer, the directory structure looks like this - but the script accounts for the possibility that these directories don't exist yet, so it creates them for you. 
 
 ![Screenshot 2024-06-23 at 17.21.04.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-06-23_at_17.21.04.png)
 
  
 
-How are we going to achieve this ? The answer is pretty straightforward: we will write the python-code, which will read the list of files from the downloaded directory, will split them in proportion (80% / 20%) and put them in the corresponding directory, which we either can create on our own or our script will care about this. I will show the snippet and if you think that you still need the explanation - just open the cut. 
+How are we going to do this? The answer is pretty straightforward: we'll write Python code that reads the list of files from the downloaded directory, splits them in the 80/20 proportion, and copies them into the corresponding folders - which the script creates for you if they don't already exist. I'll show the snippet below, and if you still want the explanation afterward, just keep reading. 
 
-*Please, keep in mind that because of one or several files are corrupted (at least Python was throwing exception during the code’s execution on my machine about some files cannot be read) I use the additional function to verify that image, which is going to be used, will not cause problems.*
+*Keep in mind that because one or more files are corrupted (Python threw exceptions on my machine about certain files not being readable), I use an extra function to verify that an image won't cause problems before it's used.*
 
 ```python
 from PIL import Image
@@ -135,14 +135,14 @@ for i in range(train_size, len(cat_filenames)):
 
 ### Explanation of Python code for file’s operation
 
-Let’s run through this code if you think that it is needed to be explained. Basically if you are interested in **Image classification** only, you can easily skip it, because it does only files operation: all you need to know that the result is the two folders: **train** and **validation**, where the source image files distributed in the proportion 80/20%.  To achieve this you just have to setup two variables, which are self explanatory enough. 
+Let's walk through this code in case it needs explaining. If you're only interested in **image classification**, feel free to skip this part - it's purely file operations. All you need to know is that the result is two folders, **train** and **validation**, with the source images distributed between them in an 80/20 proportion. To make this work, you just need to set two variables, which are fairly self-explanatory. 
 
 ```python
 original_dataset_dir = "kagglecatsanddogs_5340/PetImages"
 base_dir = "dataset"
 ```
 
-So the first function is just to verify that image is valid: it happens, as I’ve mentioned above already, because some image(s) are broken and I’d like to filter out the corrupted ones.
+The first function simply verifies that an image is valid. As I mentioned above, some images are broken, and I want to filter the corrupted ones out.
 
 ```python
 # Function to check if a file is a valid image
@@ -155,7 +155,7 @@ def is_image_file(filename):
         return False
 ```
 
-Next block of code just create the two folders with hardcoded names: **train** and **validation.** Before that, it deletes any old **train** and **validation** folders if they already exist - otherwise, re-running the script would copy files on top of an older split, and because the shuffle below has no fixed seed, the same image could end up in **train** on one run and **validation** on another, quietly leaking data between the two sets.
+The next block of code creates the two folders with hardcoded names, **train** and **validation**. Before that, it deletes any old **train** and **validation** folders that already exist - otherwise, re-running the script would copy files on top of an older split, and because the shuffle below has no fixed seed, the same image could end up in **train** on one run and **validation** on another, quietly leaking data between the two sets.
 
 ```python
 # Create directories
@@ -170,7 +170,7 @@ os.makedirs(train_dir, exist_ok=True)
 os.makedirs(validation_dir, exist_ok=True)
 ```
 
-The next one code is pretty similar basically: inside every recently created directories it creates the corresponding pair: **cats** and **dogs.**
+The next bit of code is pretty similar: inside each of the directories we just created, it creates a corresponding pair of subfolders, **cats** and **dogs**.
 
 ```python
 train_cats_dir = os.path.join(train_dir, "cats")
@@ -184,7 +184,7 @@ os.makedirs(validation_cats_dir, exist_ok=True)
 os.makedirs(validation_dogs_dir, exist_ok=True)
 ```
 
-And the file’s operations again. So let’s take the list of files from downloaded and unarchived folder (unarchived by you, sorry for that). 
+And more file operations. Let's grab the list of files from the downloaded and unarchived folder (you'll have to unarchive it yourself, sorry about that). 
 
 ```python
 cat_filenames = [
@@ -207,9 +207,9 @@ random.shuffle(cat_filenames)
 random.shuffle(dog_filenames)
 ```
 
-Here the questions might be arisen - why do we need to shuffle the files before using it, as somebody added the images of animals to folders, keeping some order ? There is the good question. The first and the main reason is the **generalisation** of the data in order to obviate the several factors like **order bias** (basically we have no clue how the dataset has been created, probably there were some circumstances like the sympathy of the creators to the certain type of cats or dogs; or probably the list of images has some correlations - metrics or spatial. For example in our case the images of cats could be captured from videostream and the neighbour images might be  pretty similar. In case of the hand-writing classification the case might be even worth: you can imagine that species of writing were gathered from the students of the same school where the order rules of the handwriting exist).
+You might be wondering why we need to shuffle the files before using them, since whoever added the images to the folders presumably kept some kind of order. Good question! The main reason is to **generalize** the data and avoid factors like **order bias**. We have no idea how the dataset was actually created - maybe the people who compiled it had some sympathy for certain types of cats or dogs, or maybe the list of images has some correlation, whether temporal or spatial. For example, the cat images in our dataset could have been captured from a video stream, in which case neighboring images might be very similar to each other. In the case of handwriting classification, it could be even worse: imagine a set of samples gathered from students at the same school, where handwriting conventions taught there introduce their own order-based bias.
 
-The next one code is pretty straightforward again - it’s about having two different it terms of size datasets: 80% images is for training, the remaining 20% is for validation:
+The next bit of code is straightforward again - it's about producing two datasets of different sizes: 80% of the images for training, and the remaining 20% for validation:
 
 ```
 # Define split sizes
@@ -229,17 +229,17 @@ for i in range(train_size, len(cat_filenames)):
     shutil.copyfile(os.path.join(dog_dir, dog_filenames[i]), os.path.join(validation_dogs_dir, dog_filenames[i]))
 ```
 
-The copying files to these folders which will be ready to be used for image classification. The result on my laptop looks like this:
+Copying the files into these folders leaves them ready to be used for image classification. On my laptop, the result looks like this:
 
 ![Screenshot 2024-06-25 at 22.02.30.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-06-25_at_22.02.30.png)
 
 ## Image classification
 
-There is the plan to describe the process: we will go through the code with the pretty superficial explanation what’s happening here and only afterwards will try understand what’ s going on underhood.
+Here's the plan for this section: we'll first go through the code with a fairly superficial explanation of what's happening, and only afterward try to understand what's going on under the hood.
 
 ### Preparation of images
 
-So on the next step we’re going to prepare our images to be processed. The preparations stands itself in adding the random elements to the images, simultaneously not corrupting them. Every images will be rotated, moved, rescaled, some new pixels will be added in order to prevent the order bias: the reason is the similar to the one, which we discussed the necessity of the shuffling the files.  Because our final result is considered to have model which should be able to cope with any unknown at the moment of the learning process images, it makes sense to prepare out model in advance: let’s  augument our images in the way to assign the elements of uncertainty to the images. 
+In the next step, we're going to prepare our images for processing. This preparation consists of adding random elements to the images without corrupting them: every image gets rotated, shifted, rescaled, and has some new pixels added, in order to prevent the same kind of order bias we discussed when talking about shuffling the files. Because our final model needs to be able to handle images it has never seen before, it makes sense to prepare it for that in advance - let's augment our images in a way that introduces some element of uncertainty. 
 
 ```python
 # Data augmentation and normalization for training
@@ -255,21 +255,21 @@ train_datagen = ImageDataGenerator(
 )
 ```
 
-So here we’re preparing the object, which is the set of some rules, which in turn will be applied to images a bit further. 
+Here we're preparing an object that holds a set of rules, which will be applied to the images a bit further down. 
 
-I can show you how it works using the augmented image and after we can discuss this step in more details.
+I can show you how this works using an augmented image, and then we can discuss this step in more detail.
 
-Let’s see on the original image before augmentation:
+Let's look at the original image before augmentation:
 
 ![Screenshot 2024-06-26 at 22.12.35.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-06-26_at_22.12.35.png)
 
-And the result of augmentation, using the property’s values, described in object above:
+And here's the result of augmentation, using the property values described in the object above:
 
 ![Screenshot 2024-06-26 at 22.14.10.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-06-26_at_22.14.10.png)
 
-So you can easily detect that the images has been changed pretty considerably, by the applying rules which lead the image to be augmented, but still keeping the recognisable object on that image (I hope the cat still can be identified). Also it’s pretty important to mention about that augmentation has random parameters: it’s really not mandatory that the same changes will be applied to every image in the same or even similar way. It’s because of all numeric parameters in  `ImageDataGenerator` has random range of values. 
+You can easily see that the image has been changed considerably by the augmentation rules, while still keeping the object recognizable (I hope the cat is still identifiable). It's also worth mentioning that augmentation uses random parameters: there's no guarantee the same or even similar changes will be applied to every image, because all the numeric parameters in `ImageDataGenerator` are drawn from a random range of values. 
 
-As result we will have more varied dataset and this adds the robustness to our dataset and make it more stable. For academic interest I put the explanation of the parameters below, but, frankly speaking, understanding them is not compulsory for comprehending the next steps. Also please don’t ask me about the particular values of the parameters. 
+As a result, we get a more varied dataset, which adds robustness and makes it more stable. For academic interest, I've included an explanation of the parameters below, but understanding them isn't necessary for following the next steps. Also, please don't ask me why I chose these particular parameter values. 
 
 **ImageDataGenerator Parameters**
 
@@ -321,14 +321,14 @@ As result we will have more varied dataset and this adds the robustness to our d
 
 •	**Effect**: Pixels newly created by transformations (like shifts and rotations) are filled in with the nearest pixel value from the original image.
 
-We’re going to apply the same approach to the validation dataset, but with only one parameters - rescaling - and the reason of that for the validation dataset we’d like to keep our images unchanged to have more realistic images for validation our trained model. 
+We're going to apply the same approach to the validation dataset, but with only one parameter: rescaling. That's because, for validation, we want to keep the images unchanged, so we're evaluating our trained model on realistic images. 
 
 ```
 # # Only rescaling for validation
 validation_datagen = ImageDataGenerator(rescale=1./255)
 ```
 
-And when our lists of rules how to augmented the images are ready we can start basically to works with images. Please, keep in mind, that albeit now some calculations are already started at this moment, but this calculation pertains to image’s processing only, not about neural network’s, which will be initialised later. 
+Now that our rules for augmenting the images are ready, we can actually start working with the images. Keep in mind that although some calculation is already happening at this point, it's only image processing - the neural network itself hasn't been initialized yet. 
 
 ```python
 train_generator = train_datagen.flow_from_directory(
@@ -346,11 +346,11 @@ validation_generator = validation_datagen.flow_from_directory(
 )
 ```
 
-Since both invocations are basically the same with difference in directory’s names, let’ s discuss what’s happening having the first one as example.
+Since both invocations are basically the same, differing only in the directory name, let's discuss what's happening using the first one as an example.
 
-By the name `flow_from_directory` it’s pretty easy to suggest that functions reads files from directory - and it’s true. Basically this method is used for the long arrays of messages from the storage, when it’s nor reasonable to keep all them into memory. 
+Given the name `flow_from_directory`, it's easy to guess that this function reads files from a directory - and that's exactly right. This method is meant for reading long sequences of data from storage in cases where it wouldn't be reasonable to keep it all in memory at once. 
 
-Obviously that `train_dir` is the directory’s name from which the method is going to read the images, and `target_size` prescribes to change the size of every methods. It is done in order to have the dataset consistent, what is actually important for the next calculations in terms of neural networks. The sense of `batch_size` is fairly straightforward, so let’s stop on the `class_mode` . This specifies the one of the main result of this function - processing images and labelling them. Actually it means that result of this process will be the certain pair - processed image and some label. The second part of this pair - label - will be binary, because we directly asked about that `class_mode='binary'`  and the final result will fe the sequence: 
+`train_dir` is, obviously, the name of the directory the method reads images from, and `target_size` tells it to resize every image. This is done to keep the dataset consistent, which matters for the calculations that come later. The meaning of `batch_size` is pretty straightforward, so let's focus on `class_mode`. This defines one of the function's main outputs - processing images and labeling them. In practice, that means the result of this process is a pair: a processed image plus a label. That label is binary, because we asked for `class_mode='binary'`, and the final result is a sequence like: 
 
 `image1 - 0`
 
@@ -364,13 +364,13 @@ Obviously that `train_dir` is the directory’s name from which the method is go
 
 `image2001-1` 
 
-You may comprehend this like manual association of some property (which is named as label in Machine Learning) from the space (0;1) to every images and it implies that after the method will complete his job, we will have the labeled dataset.
+You can think of this as manually associating a property - what's called a "label" in Machine Learning - drawn from the set {0, 1}, with every image. Once the method finishes its job, we end up with a labeled dataset.
 
-You way be wondering how it works. So method  will run through the `train_dir` and will fetch the names of the subdirectories, obtaining obviously `['cats', 'dogs']` . After that this array will be alphabetically ordered and for the first name **0** will be associated and for the second one, for sure, the label will be **1**. As result we have the binary-labeled dataset. Lucky case that we have only two animals to classify - for sure, if we were have more than two, we would have been do something more complicated. 
+You might be wondering how this actually works. The method scans through `train_dir` and fetches the names of its subdirectories, which gives it `['cats', 'dogs']`. This list is then sorted alphabetically, so the first name gets label **0** and the second gets label **1**. The result is our binary-labeled dataset. We're lucky here to only have two classes to distinguish - if we had more than two, we'd need something more elaborate than a single binary label. 
 
 ### Coming closer to neural network
 
-So we are pretty close to the most hardcore part of our process - training our model or, better say, neural network. Let me to show you the main actor of this show and we will discuss what it is.
+We're getting close to the most intense part of our process: training our model, or more precisely, our neural network. Let me show you the main actor of this show, and we'll discuss what it actually is.
 
 ```python
 model = Sequential([
@@ -389,11 +389,11 @@ model = Sequential([
 ])
 ```
 
-So you can see exactly what we’re going to train. Basically if you familiar with process of developing program, we can pretty conditionally to make the analogy: you see the code, which should be compiled a bit later and be running. So now we are on the first stage: we are “coding” something, which is going to be used as template for the future calculation.
+So this is exactly what we're going to train. If you're familiar with the software development process, you can loosely think of this by analogy: you're looking at code that will be compiled and run a bit later. Right now we're at the first stage - "coding" something that will serve as a template for the calculations to come.
 
-Good news that result of the invocation is the exactly neural networks no matter how corny it sounds. You may be perplexed by this, but let to provide you proof. 
+The good news is that the result of this invocation is, quite literally, a neural network, corny as that might sound. You might find that hard to believe, so let me prove it to you. 
 
-If you follow my storyline then you have Python of being installed on your computer, so you can run this code without problem. Let’s do this - please, take into account that `model` is the same what we can see above. We’re juts going to look into the cover of this `model` . 
+If you've been following along, you already have Python installed, so you can run this code without any trouble. Let's do exactly that - keep in mind `model` here is the same one we defined above. We're just going to peek under its hood. 
 
 ```python
 from tensorflow.keras.models import Sequential
@@ -420,19 +420,19 @@ model = Sequential([
 plot_model(model, to_file='cats_vs_dogs_model.png', show_shapes=True, show_layer_names=True)
 ```
 
-So if you run this code, then according to the invocation of method 
+If you run this code, the call to 
 
 `plot_model(model, to_file='cats_vs_dogs_model.png', show_shapes=True, show_layer_names=True)`
 
-in the directory where you script is saved, you will find the png file which looks like this (I quote it in full because it visualise some complicated structure and it might serve as good feedback from the blackbox, which the neural network might seem):
+will save a PNG file in your script's directory that looks like this (I'm including it in full because it visualizes a fairly complicated structure, and it can serve as useful feedback from what might otherwise feel like a black box):
 
 ![Untitled](Github%20f2c7e7b803134e089c4484d14eb5d863/Untitled.png)
 
-We have to discuss it in thoroughly because this is “code” or, if you want, the “skeleten” of our calculation process. 
+We need to go through this thoroughly, because this is the "code," or if you prefer, the "skeleton," of our calculation process. 
 
-So, using scientific style, we may say that this is visualisation of calculation layers of neural network. You may heard before, that a neural network is the sequence of artefacts, named “neurones”,   which are connected in the mesh or network. Seeing on this schema you may notice that there are nodes as well and they are connected sequentially. This gives you some analogue of the out non-precise definition of a neural networks, but it’s good point to start. 
+In more formal terms, this is a visualization of a neural network's calculation layers. You may have heard before that a neural network is a sequence of units, called "neurons," connected together into a mesh, or network. Looking at this diagram, you'll notice there are nodes here too, connected sequentially. That gives you an analogue for a somewhat loose definition of a neural network, but it's a good place to start. 
 
-Let me to put this image and code, which creates it, together.
+Let me put this image and the code that creates it side by side.
 
 ```python
 model = Sequential([
@@ -453,13 +453,13 @@ model = Sequential([
 
 ![Untitled](Github%20f2c7e7b803134e089c4484d14eb5d863/Untitled%201.png)
 
-You shouldn’t be Sherlock Holmes to find the coincident between the method and his result. If you think that every parameters creates something which is depicted on schema as black-white block - then yes, it’s true, even, some blocks are repeated, but every of them has its own properties. 
+You don't need to be Sherlock Holmes to spot the correspondence between the method and its result. If you think every parameter creates something depicted on the diagram as a black-and-white block, then yes, that's exactly right - even though some blocks repeat, each one has its own properties. 
 
 ### Convolution
 
-Let’s talk about it in details. And let me to use the term “layer” and “sequence of layers” because both of them correspond as to intuitive and to the real state of things in this abstraction.
+Let's talk about this in detail. I'll use the terms "layer" and "sequence of layers," since both of them correspond well to an intuitive understanding, as well as to what's actually happening in this abstraction.
 
-So we’re talking about Convolutional Neural Networks, which is perfectly meet the expectation of Image classification, because such networks process the every image not “entirely” as matrix of pixels, but make some convolution for certain part of image, pursuing two targets: dwindling the calculation networks (although it’s not problem in last time) and unification of images. 
+So we're talking about Convolutional Neural Networks, which are a great fit for image classification, because they don't process an entire image "at once" as one big matrix of pixels. Instead, they run a convolution over certain parts of the image, pursuing two goals: reducing the amount of computation (though that's less of a concern nowadays) and normalizing the images. 
 
 Virtually it can be images like it is shown on animation below (btw, this gif is created by the neural network as well):
 
@@ -467,9 +467,9 @@ Virtually it can be images like it is shown on animation below (btw, this gif is
 
 ![Untitled](Github%20f2c7e7b803134e089c4484d14eb5d863/Untitled.gif)
 
- So every movement of the white rectangle over the original image (it our case it will be our cat or dog) covers the some part of pixels, which are argument of some calculation method. This is a convolution without additional details. Of course, there are a lot of computational procedures, which can be applied to solve the certain problem or issue during convolution, and good news here that the majority of cases are already known and you don’t need to make the investigation for the concrete one, it’s really enough just to see some analogy.
+Each movement of the white rectangle over the original image (a cat or dog, in our case) covers some part of the pixels, which become the argument to a calculation method. That, without going into further detail, is a convolution. There are, of course, plenty of computational procedures you could apply during convolution to solve a specific problem, but the good news is that the majority of common cases are already well known - you don't need to research your own from scratch, an existing analogy is usually enough.
 
-We will discuss the invocation of every parameter in `Sequential()` sequentially, but let me to put at the first place more simple method  `MaxPooling2D` . In my opinion, the introducing the logic of this method first will provide some common perspective of computational operation and afterwards we can return back to `Conv2D` .
+We'll walk through every parameter passed to `Sequential()` in order, but let me start with the simpler of the two methods, `MaxPooling2D`. In my opinion, introducing its logic first gives you a general sense of how these computations work, and then we can circle back to `Conv2D`.
 
 ### First invocation of MaxPooling2D(2, 2)
 
@@ -479,7 +479,7 @@ We have this
 MaxPooling2D(2, 2)
 ```
 
-Please, believe me that if you read this first time the academic definition gives you nothing, except for probably several details like 2D, which will lead you to the thought that this something is applicable for flat object. The last point is absolutely right, but let me to show how `MaxPooling2D` works using simple example.
+Trust me, if this is your first time reading it, the academic definition won't tell you much - except maybe the "2D" part, which hints that this applies to flat objects. That part is absolutely right, but let me show you how `MaxPooling2D` actually works with a simple example.
 
 So we have some input:
 
@@ -493,7 +493,7 @@ Input Feature Map (4x4):
 ]
 ```
 
-Let’s introduce two terms to operate them here.
+Let's introduce two terms we'll need here.
 
 1.	**Pool Size**:
 
@@ -505,9 +505,9 @@ Let’s introduce two terms to operate them here.
 
 •	The stride specifies how much the window moves after each operation. By default, for max pooling, the stride is the same as the pool size, so for a 2x2 pool, the stride is 2.
 
-And basically the operation of pooling looks as you can on animation above.
+The pooling operation basically works the same way as the animation shown above.
 
-But example: apply 2x2 max pooling with a stride of 2.
+As an example: let's apply 2x2 max pooling with a stride of 2.
 
 1. **First Window (Top-left 2x2 region)**
 
@@ -518,7 +518,7 @@ But example: apply 2x2 max pooling with a stride of 2.
 ]
 ```
 
-Do you remember the semantic of our method invocation ? `Max` …. Yes, max pooling operation’s result on this window is 6 because it’s maximum value from in this certain window. Go further! Let’s shift our window to the right - what do we get ? Correct!
+Remember what the method's name tells us? `Max` .... Right - the result of max pooling on this window is 6, because that's the maximum value in this particular window. Let's move on! Shift the window to the right - what do we get? Correct!
 
 2. **Second Window (Top-right 2x2 region)**
 
@@ -529,7 +529,7 @@ Do you remember the semantic of our method invocation ? `Max` …. Yes, max pool
 ]
 ```
 
-Maximum value here is 8. Go further!
+The maximum value here is 8. Onward!
 
 1. **Third Window (Bottom-left 2x2 region)**
 
@@ -551,7 +551,7 @@ Maximum here is 14.
 ]
 ```
 
-No needs to say which form of the final result will be:
+It should already be clear what the final result looks like:
 
 ```python
 Output Feature Map (2x2):
@@ -561,32 +561,32 @@ Output Feature Map (2x2):
 ]
 ```
 
-So I hope using this example I was able to show you the essential of what pooling is. You can easily think about this like “aggregation” or “convolution” of the matrix pixel in order to reduce dimensions of an every image and, most important, extract the most prominent value from the given window, forming in this way the more informative matrix of data (probably). If you have the insight that this computation procedure is pretty simple and it’s absolutely not obvious how it helps us in our task - image classification - then I can say that most popular result were obtained not because of some light brilliant mind decided that this is sole method to extract data using only pencil and paper, but yes, they tried and it turned out that even such simple method works. 
+I hope this example helped show you the essence of pooling. You can think of it as "aggregating," or condensing, the pixel matrix in order to reduce each image's dimensions and, more importantly, extract the most prominent value from a given window - forming a (probably) more informative matrix of data in the process. If your reaction is that this computation is pretty simple, and it's not at all obvious how it helps with our actual task of image classification, I'd say: the most widely used results weren't discovered because some brilliant mind sat down with pencil and paper and declared this the one true method. Rather, people just tried it, and it turned out that even a method this simple works. 
 
-*But to be honest my main task here is to eliminate the feeling of magic, which is tangled with the Neural Networks. So far you had a chance to ensure that is was the computation only.  Further the same will be.*
+*But honestly, my main goal here is to strip away the sense of magic that tends to surround neural networks. So far, you've seen that it's really all just computation. It'll stay that way going forward.*
 
 ### First invocation of Conv2D
 
-Return back to the code
+Back to the code:
 
 ```python
 Conv2D(32, (3, 3), activation='relu', input_shape=(150, 150, 3)),
 ```
 
-This is the first parameter of invocation of `Sequential` .
+This is the first argument passed to `Sequential`.
 
-We’re asking to create the first layer of our convolutional neural network (CNN), which should posses the following properties:
+Here we're asking to create the first layer of our convolutional neural network (CNN), with the following properties:
 
 - 32 filters (will be increased in the next invocation)
 - Each filter has size 3*3 pixels
-- **activation=‘relu’**: The ReLU (Rectified Linear Unit) activation function is applied, which introduces non-linearity and helps the network learn complex patterns. You can think about this like some computational approach, it should be enough if read this first time.
+- **activation='relu'**: The ReLU (Rectified Linear Unit) activation function is applied here, which introduces non-linearity and helps the network learn complex patterns. For now, you can just think of this as a computational technique - that's enough to know on a first read.
 - **input_shape=(150, 150, 3)**: The input shape of the images is 150x150 pixels with 3 color channels (RGB). This is specified only for the first layer.\
 
-Please stop here and think again what we are trying to do: we get every image from our folder and let him pass through the sequence of layers, where every will apply some computational procedure. 
+Pause here for a second and think again about what we're doing: we take every image from our folder and pass it through a sequence of layers, each of which applies its own computational procedure. 
 
-Now I have no choice expect for describing this “computational procedure”, hoping that you’ll be able to detect some analogy with previous chapter.
+Now I have no choice but to describe this "computational procedure," hoping you'll be able to draw an analogy with the previous section.
 
-Our vocabulary in this  case is the following:
+Here's the vocabulary we'll need:
 
 1.	**Input Shape**:
 
@@ -608,7 +608,7 @@ Our vocabulary in this  case is the following:
 
 •	**activation=‘relu’**: The Rectified Linear Unit (ReLU) activation function is applied to the output of the convolution operation. ReLU sets all negative values to zero and keeps positive values unchanged, introducing non-linearity into the model.
 
-If you read this without understanding, let me to show you the process by example again. As example we’re going to use the grayscale image (it means that the value of each color will be restricted by the fixed amount of colors, but it doesn’t matter for our demonstration of principle how it works) 5x5 pixels. Such image can be presented in terms of Python (or linear algebra if you want)like this:
+If you read that without fully understanding it, let me walk through the process with another example. This time we'll use a 5x5-pixel grayscale image (meaning each pixel's value is restricted to a fixed range rather than full RGB - it doesn't matter for demonstrating the principle). Such an image can be represented in Python (or in linear-algebra terms, if you prefer) like this:
 
 **Input image**
 
@@ -622,7 +622,7 @@ If you read this without understanding, let me to show you the process by exampl
 ]
 ```
 
-Also we’re going to use **filter** as we described in during the method invocation.
+We'll also use the **filter** we described earlier, in the method invocation:
 
 ```python
 [
@@ -632,9 +632,9 @@ Also we’re going to use **filter** as we described in during the method invoca
 ]
 ```
 
-If you still remember my clumsy animation, showing the movement of the filter over image, we’re going to simulate every step this movement, but using the certain amount values of the image and  filter.
+If you still remember my clumsy animation showing the filter moving across the image, we're going to simulate every step of that movement, this time using actual values from the image and the filter.
 
-So we’re at the left-top corner. Out filter covers the some part of our image. Extract the values and it will be:
+So we start at the top-left corner. Our filter covers a part of the image; extracting those values gives us:
 
 ```python
 [
@@ -644,7 +644,7 @@ So we’re at the left-top corner. Out filter covers the some part of our image.
 ]
 ```
 
-Let’s make element-wise multiplication of our extracted values of pixels (don’t forget we’re operating by the grayscale image) and our filter. I hope either Excel or Python or whatever you prefer in this case (I don’t use multiplication signs between the digits of the same sign):
+Let's do an element-wise multiplication between these extracted pixel values (remember, we're working with a grayscale image) and our filter. Feel free to check this with Excel, Python, or whatever you prefer (note: I'm omitting multiplication signs between digits that share the same sign):
 
 ```python
 (1*1 + 2*0 + 3*(-1)) + (0*1 + 1*0 + 2*(-1)) + (3*1 + 2*0 + 1*(-1))
@@ -655,7 +655,7 @@ Let’s make element-wise multiplication of our extracted values of pixels (don�
 
 And obviously the first result of applying our filter is -2.
 
-Next shift to the right by our filter over our image and we have the extracted values of pixels:
+Next, shift the filter one step to the right over the image, and we get these extracted pixel values:
 
 ```python
 [
@@ -665,7 +665,7 @@ Next shift to the right by our filter over our image and we have the extracted v
 ]
 ```
 
-We already know how out filter looks like, so let me to make the element-wise multiplication again:
+We already know what our filter looks like, so let's do the element-wise multiplication again:
 
 ```python
 (2*1 + 3*0 + 0*(-1)) + (1*1 + 2*0 + 3*(-1)) + (2*1 + 1*0 + 0*(-1))
@@ -676,7 +676,7 @@ We already know how out filter looks like, so let me to make the element-wise mu
 
 The result is 2.
 
-I will let myself not continue the process because I hope it is already should be pretty clear. So I will put the intermediate state of filters like this:
+I'll spare you the rest of the process, since I hope it's already pretty clear by now. Here's the intermediate state of the output:
 
 ```python
 [
@@ -686,7 +686,7 @@ I will let myself not continue the process because I hope it is already should b
 ]
 ```
 
-ReLU activation is telling us that all negative values in this matrix should be a zero, so:
+ReLU activation then tells us that every negative value in this matrix becomes zero, so:
 
 ```python
 [
@@ -696,13 +696,13 @@ ReLU activation is telling us that all negative values in this matrix should be 
 ]
 ```
 
-This is our skimped result, but I hope the gist of computational procedure should be clear. 
+This is a shortened version of the result, but I hope the gist of the computation is clear. 
 
-Let’s repeat one more time what we did: we load every available image and pass it through the sequence of layers, each of them does some part of work. And the amount of such layer and certain values, which we use during invocation, this is separated and fairly big topic, which I let myself to skip in this text. 
+Let's recap what we just did: we load every available image and pass it through a sequence of layers, each doing its own part of the work. Exactly how many layers to use, and which specific values to pass in, is a separate and fairly large topic that I'll skip in this text. 
 
 ### Next invocations of Conv2D and MaxPooling2D
 
-I will put the code which we’re keep under our magnitude here again. 
+Let me paste the code we've been focusing on once more: 
 
 ```
 model = Sequential([
@@ -721,16 +721,16 @@ model = Sequential([
 ])
 ```
 
-Seeing on this code with some part of attentions we can notice that method Conv2D() is invoked several times (four times for precise’s sake) and with every invocation the filter’s amount increases: **32, 64, 128 and 128** again.And basically nothing can stop us from doing the same. 
+Looking closely at this code, you'll notice that `Conv2D()` is invoked several times - four, to be precise - and with each invocation the number of filters increases: **32, 64, 128, and 128** again. And really, nothing stops us from doing the same in our own experiments. 
 
-*The reason of such sequential invocation is that after the previous one we extract more complex and concurrently abstract data from image. As it is considered it brings to our models more levels of complexity and decreases the spatial complexity of images in turn. If you read this and feel that this explanation is not satisfying you, then believe, you are not the one who thinks the same. This computational approach - sequence of layers - are result of “learning” models by infinite times before a researcher obtained some meaningful result. If you going to delve deeper in this, you should be ready to accept some things which seem not obvious, straightforward or intuitively clear. All this is the result of some experience and before you get the same you have to pass through this on your own.*  
+*The reason for this sequential invocation is that each layer extracts increasingly complex and abstract data from the image. This is thought to add more levels of complexity to the model while, in turn, reducing the spatial size of the image. If this explanation doesn't fully satisfy you, believe me, you're not alone. This layered approach is the result of researchers training models over and over, an enormous number of times, before arriving at something meaningful. If you want to dig deeper into this, be prepared to accept some things that aren't obvious or intuitive at first. That understanding comes from experience, and you'll have to build it yourself, the same way everyone else did.*  
 
-Let me to prove you again that the sequence invocation of the pair 
+Let me prove to you once more that invoking this pair together
 
 `Conv2D(32, (3, 3), activation='relu', input_shape=(150, 150, 3)),
 MaxPooling2D(2, 2)`
 
-brings fairly big benefit to our computational procedure. 
+brings a fairly significant benefit to our computation. 
 
 **First pair** 
 
@@ -781,39 +781,39 @@ MaxPooling2D(2, 2)
 
 **MaxPooling2D**: Reduces the spatial dimensions of each feature map from 15x15 to 7x7 (15 // 2 = 7 — the one leftover row/column that doesn't make a full 2x2 window is simply dropped).
 
-If you keep looking on the decreasing the size of parameters, which were outputs of `MaxPooling2D` , you can easily detect that it was dwindled drastically, which in turn gives to us the meaningful benefit - the decreasing the size of maps which we process during out learning of neural network. 
+If you keep an eye on how the output sizes shrink at each `MaxPooling2D` step, you'll notice they drop drastically - which gives us a real, meaningful benefit: smaller feature maps to process during training. 
 
 ### Flatten() invocation
 
-There is good case when the name of the method fully corresponding to what this method does. It really flattens our 2D input (basically images which have been passed through the previous layers) into the 1D output literally. So it means that out next computational procedure will work not with matrix, but with single-row vector. Mathematically we’re talking about concatenation of elements of 2D input to 1D. 
+This is a great case of a method name matching exactly what it does. `Flatten()` literally flattens our (by now heavily processed) 2D input into a 1D output. That means the next computational step will work not with a matrix, but with a single-row vector. Mathematically, we're talking about concatenating the elements of a 2D input into 1D. 
 
-For example in our case of image classification before the invocation of `flatten()` our input will be the **tensor** (7, 7, 128). You can understand this like the following - tensor is the mathematical object, which has **width** and **height,** which are 7 and 7 correspondingly and has third parameter, conditionally named **depth,** which can be attributed like results of computations from the previous steps and this results are the sequence of maps with certain width and height. You can imagine this like **stack** of matrixes with size 7x7 and count of this matrixes in this stack is 128. Or more figural - every 7x7 matrix from these 128 is some “snapshot” of the original image, and every snapshot keeps some unique characteristic of image, which will be applied during image classification. 
+For example, in our image classification case, right before `flatten()` is invoked, our input is a **tensor** of shape (7, 7, 128). Here's how to think about that: a tensor is a mathematical object with a **width** and a **height** - 7 and 7, respectively - and a third parameter, informally called **depth**, which comes from the results of the previous layers' computations: a sequence of feature maps, each with that same width and height. You can picture this as a **stack** of 128 matrices, each 7x7. Or, more figuratively, each of those 128 7x7 matrices is a "snapshot" of the original image, and every snapshot captures some unique characteristic that will be used during classification. 
 
-Next image of this visualisation is created by the neural network, by the way, but this is absolutely another story.
+By the way, the next image, a visualization of this, was itself created by a neural network - but that's a completely different story.
 
 ![Untitled](Github%20f2c7e7b803134e089c4484d14eb5d863/Untitled%202.png)
 
-So before the `flatten()` will be invoked we have such structure, which is named tensor, and after `flatten()` invoked we have 1D-structure, which is the result of concatenation of 49 items of evert feature map (card on the picture above) and such concatenation block will be repeated 128 times. So it’s easily to calculate that total amount of element in this structure will be 
+So before `flatten()` is invoked, we have this tensor structure; after it's invoked, we get a 1D structure, formed by concatenating the 49 values from each feature map (each "card" in the picture above), repeated for all 128 of them. So it's easy to calculate the total number of elements in this structure: 
 
 ```python
 Flattened Shape: (7 * 7 * 128) = (6,272)
 ```
 
-Let me repeat again that all magic of this pretty long image classification procedure in reality is just the sequence of trivial (relatively) calculations. There is absolutely another question **why** this sequence lead us to the required result, but let me leave this out of the scope of this text.
+Let me repeat once more: all the "magic" in this fairly long image-classification procedure is, in reality, just a sequence of (relatively) trivial calculations. **Why** this particular sequence gets us the result we want is an entirely different question, one I'll leave outside the scope of this text.
 
 ### Dense() invocation
 
-More precisely
+More precisely:
 
 ```python
 Dense(512, activation='relu'),
 ```
 
-So let’s investigate the anatomy of what is happening here as well.
+Let's dig into the anatomy of what's happening here as well.
 
-Here we have to introduce several new terms to operate them further. We need **weights** and **biases**. 
+We need to introduce a couple of new terms here: **weights** and **biases**. 
 
-But before let’s define the formal values what we can see in the method’s invocation:
+But first, let's pin down the values we see in this method invocation:
 
 1. `512` (Neurons):
 •	**Description**: The 512 specifies the number of neurons in this dense layer.
@@ -824,13 +824,13 @@ $$
 f(x) = \max(0, x)  
 $$
 
-which as it’s easy to notice that it sets all negative values to zero and leaves positive values unchanged.
+which, as you can easily see, sets every negative value to zero and leaves positive values unchanged.
 
-Keeping in mind that our input for this case is 1D-structure which contains `6272` items, we will define the **weights** as some numerical characteristic which should be associated with **every** neurons, declared as first parameter of our method. Because we’re talking about every neuron, it means that whole amount of weights will be `6272*512 = **3211264**` 
+Keeping in mind that our input here is a 1D structure containing `6272` items, we'll define **weights** as a numeric value associated with **every** neuron - and since our layer has 512 neurons (the first parameter to `Dense`), the total number of weights works out to `6272*512 = **3211264**` 
 
-Also every neuron has his own **bias**. Bias is the characteristic of every neuron as well, so we will be having 512 biases here.
+Every neuron also has its own **bias**, which is likewise a per-neuron characteristic - so we end up with 512 biases here.
 
-Now we have add more complexity to our computational process, because we have to introduce the weighted sums for every neuron. And the formula using which we will be calculation this parameter will be the following:
+Now we need to add a bit more complexity to our computation, since we have to introduce a weighted sum for every neuron. The formula for that looks like this:
 
 $$
 
@@ -849,32 +849,32 @@ $$
 
 The result of our calculation
 
-This is the weight connecting $i$ and $j$ neuron. Don’t forget that our input is the one-dimensional structure, with some values in amount 6272 and with every neuron we have the array of values, named weights, associated with the certain neuron. 
+This is the weight connecting neuron $i$ to neuron $j$. Remember, our input is a one-dimensional structure of 6272 values, and every neuron has its own array of weights, one per input value, associated with it. 
 
  $x_i$ 
 
 ![Screenshot 2024-08-05 at 21.49.15.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-08-05_at_21.49.15.png)
 
-Our input. Basically this is every certain element from out vector with 6272 items.
+Our input - specifically, each individual element from our 6272-item vector.
 
  $b_j$                          Bias for  $j$-th neuron
 
-Here we have the except for our input $x_i$ two arrays as well - weights and biases. Concretely for this step of calculation both of them will be initialised by some random values - weights by values which are close to zero, biases by the zero. I’m going to illustrate this using Python code, which you can try execute to get the full comprehension of what is going on. I will show the screenshots to keep you in context anyway and you will be able to compare what I do have and what you do have. 
+In addition to our input $x_i$, we have two more arrays here: weights and biases. At this stage, both get initialized with random values - weights close to zero, biases exactly zero. I'll illustrate this with Python code you can run yourself to fully follow along; I'll also include screenshots so you can compare what I got with what you get. 
 
-The following example for the such invocation `Dense(1, activation='relu')`  - for sure, it has no technical sense and used only for demonstration purposes.
+The example below uses `Dense(1, activation='relu')` - it doesn't make technical sense in our actual model, and it's here purely for demonstration.
 
-So we have the only one neuron. Let’s get the arrays of weight for it - 3 only for simplicity:
+So, we have just a single neuron. Let's generate the weight array for it - one weight per input value:
 
 ```python
 np.random.seed(0)  # For reproducibility
 weight_vector = np.random.uniform(-0.05, 0.05, 6272)
 ```
 
-My output looks like that from Google Colab:
+Here's what my output looked like, in Google Colab:
 
 ![Screenshot 2024-07-11 at 22.03.24.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-07-11_at_22.03.24.png)
 
-For sure, Python prints only small part from this array. The ranges of initialisation are chosen randomly, but pretty close to the real ones - small values, close to zero.  
+Of course, Python only prints a small part of this array. The initialization range here was chosen somewhat arbitrarily, but it's close to realistic values - small numbers, near zero.  
 
 The bias is just zero. 
 
@@ -882,7 +882,7 @@ The bias is just zero.
 bias = 0.0
 ```
 
-The input data for the procedure - pls, remember, that our real input is from the previous one step. Here is the demonstration. 
+As for the input data for this procedure - remember, our real input comes from the previous step. Here's a demonstration: 
 
 ```python
 input_vector = np.random.rand(6272)  # Example input vector
@@ -890,66 +890,66 @@ input_vector = np.random.rand(6272)  # Example input vector
 
 ![Screenshot 2024-07-11 at 22.07.23.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-07-11_at_22.07.23.png)
 
-Next step according to our formula, given before:
+Next, following the formula given earlier:
 
 ```python
 z = np.dot(weight_vector, input_vector) + bias
 ```
 
-And his result is (sum of the pair plus bias, which is the zero for a while):
+And here's the result (the dot product plus the bias, which is still zero at this point):
 
 ![Screenshot 2024-07-11 at 22.09.35.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-07-11_at_22.09.35.png)
 
-And the last step - ReLU activation
+And the final step: ReLU activation.
 
 ```python
 a = max(0, z)  # ReLU activation
 ```
 
-Basically it’s about getting either result of our computation if it is positive, or getting zero if not. You can consider this as getting absolute value of number or getting module of number in mathematic.
+In short, this just means keeping the result if it's positive, and replacing it with zero otherwise.
 
  
 
-So this is kind of “dense” happened, when  we from the pretty long input get something convoluted into the scalar value instead of vector. Also, pls, don’t forget that all just is only for one neuron, but according to the parameter in our invocation we have the 512 such ones. 
+So that's essentially what "dense" means here: we take a fairly long input and condense it into a single scalar value instead of a vector. And don't forget, this was all for just one neuron - our actual layer has 512 of them, per the parameter we passed in. 
 
-If at this moment you catch the though that you don’t understand why exactly we do all these things and what the essentials of weights and biases are and why do we initialise them either zero or random small values - I have to confess I understand you very well. Please, read further and I hope you’ll get the answer below.  
+If at this point you're thinking you don't really understand why we're doing any of this - what weights and biases actually are, or why we initialize them at zero or small random values - I completely understand. Keep reading, and I hope you'll find the answer below.  
 
-### Why do we do this ? Preparation for the training - open the carts
+### Why Are We Doing This? Getting Ready to Train - Laying Our Cards on the Table
 
-Speaking about the final purpose of our calculation, we’re talking about Image Classification. Or we can rephrase this in the following way - we have ordered our set of pixels of image in some canny way (literally we have 1D-sequence of pixel’s value) and we have to compare what we have as result with what we expect for. So since we have the simple case in terms of classification - binary classification or dogs-cat classification - we can say more certainly our purpose: let’s calculate something overall our pixels of some unknown image and compare the result against our two labels. Remembering that **cats** were assigned **0** and **dogs** were assigned **1**, more concretely, let’s check whether this value is close to 0 (cat) or close to 1 (dog). 
+Speaking of the ultimate purpose of our calculation - we're talking about image classification. Or, put differently: we've arranged an image's pixels in some structured way (literally, a 1D sequence of pixel values), and we need to compare what we get against what we expect. Since we have a simple binary (cat-vs-dog) classification problem, we can state our purpose more precisely: compute something from the pixels of an unknown image, and compare the result against our two labels. Remembering that **cats** were assigned **0** and **dogs** were assigned **1**, more concretely: let’s check whether this value is close to 0 (cat) or close to 1 (dog). 
 
-So in every case for every neuron (having these things with the weights and biases) we are able to make such comparison - comparison with 1. 
+So, in every case, for every neuron - each equipped with weights and biases - we're able to make this same kind of comparison against our target value. 
 
-Due to this fact - fact that we the calculated value and some expected value - we get the possibility to talk about bias not only in the common way that such bias exists, but we even can calculate such bias relatively easily. 
+Because we have both a calculated value and an expected value, we're able to talk about the gap between them - not just in the abstract, but as something we can actually compute. 
 
-Now let’s consider another one moment. Why, basically, if we have such formula
+Now let's consider one more thing. Basically, if we have a formula like this,
 
-$z_j = \sum_{i=1}^{6,272} w_{ij} x_i + b_j$ to calculate the output parameter $z_j$  - why do we think at all that some synthetic calculation result  being multiplied and summed up using the set of weights (which are, let me to remind, just small randomly initialised values ) plus bias which is zero at the stage of start  - may give us something, which we should be able to compare with 1 or 0 ? 
+$z_j = \sum_{i=1}^{6,272} w_{ij} x_i + b_j$ used to calculate the output $z_j$ - why would we even expect that this kind of synthetic result, built by multiplying and summing our (initially small, randomly initialized) weights and adding a bias that starts at zero, gives us something we can meaningfully compare against 0 or 1? 
 
-If you feel perplexity - then you are not the one. If we leave our model as is $z_j = \sum_{i=1}^{6,272} w_{ij} x_i + b_j$ and we will do the calculation only once time - it would be the most futile action in the world. Really. But secret here is that our model has some variable parameters which are weights and some parameter which allow us to say how far or close our result to what we are looking for - I mean bias. And due to this amazing fact we can do something - we can hone our variable parameters in such way - then it will be so close to 1 or zero as far as you wish. Basically this honing is that exactly what the second word in the “Machine Learning” expresses. We’re going to learn our model to make what we’d like to get - we’re going to change weights! 
+If you're feeling confused, you're not the only one. If we just left our model as-is, computing $z_j = \sum_{i=1}^{6,272} w_{ij} x_i + b_j$ a single time, that would be one of the most futile exercises imaginable. Really. But here's the secret: our model has parameters we can adjust - the weights - plus a parameter that tells us how close (or far) our result is from what we want, the bias. Thanks to that, we can actually do something about it: we can tune those parameters until the result gets as close to 0 or 1 as we like. That tuning is essentially what the word "Learning" in "Machine Learning" refers to. We're going to train our model to produce what we want, by changing its weights! 
 
 So no magic at all! 
 
-Let’s return back to the example in the previous chapter. We did the example using the sole neuron. But according to our Python’s invocation we have the 512 such neurons and it means that we have to repeat this at least 512 times. 
+Let's go back to the example from the previous section. There, we worked through a single neuron. But per our Python code, we actually have 512 such neurons, which means this whole process gets repeated at least 512 times. 
 
-We have to keep in mind that for every neuron the new set of weights and new values of bias will be generated. And further - in the process of learning - these weights will be changed in the way that  our $z_j$ will be relatively close to 1 as long as we’re trying to identify dogs on our process of binary image classification. 
+Keep in mind that every neuron gets its own freshly generated set of weights and its own bias. Then, during training, those weights get adjusted so that $z_j$ ends up relatively close to 1 whenever we're trying to identify a dog, as part of our binary classification process. 
 
-Ok, we’re moving closer and closer to the final stage of our performance. And the one of our stop is `Dropout(0.5)`. 
+OK, we're getting closer and closer to the final stage of the model. One of our remaining stops is `Dropout(0.5)`. 
 
 ### Invocation Dropout(0.5)
 
-Let me to formulate what this invocation does (buy the way, this is good case of naming of functions) and after that we discuss why do we need this.
+Let me first explain what this invocation does (by the way, this is a good example of a well-named function), and then we'll discuss why we need it.
 
-As you remember in the previous step we get 512 neurons, where with each of them we have associated the set of weights and bias. In this step - it may sound pretty strange, but nevertheless - we will drop put randomly neurons, which we obtained from the previous step. Literally the parameter in invocation of `Dropout(0.5)`  tells that 50% of neurons have a chance to be deleted from the calculation process. Let me to visualise this in this way.
+As you'll remember, the previous step gave us 512 neurons, each with its own set of weights and a bias. In this step - and I know this sounds strange - we're going to randomly drop some of those neurons. Concretely, the parameter passed to `Dropout(0.5)` means each neuron has a 50% chance of being removed from the calculation. Let me visualize this.
 
-For simplicity we can consider that from the previous step - when we do the dense of our neurons - we get only six ones in the layer #1 (in reality it was 512) 
+For simplicity, let's pretend that our previous, dense layer produced only six neurons instead of 512: 
 
 ```python
 Layer 1 (Dense):
 [Neuron1] [Neuron2] [Neuron3] [Neuron4] [Neuron5] [Neuron6]
 ```
 
-So for the following three successive iteration we will get the following states of out first layer:
+Across three successive iterations, our first layer might look like this:
 
 ```python
 Iteration 1:
@@ -966,27 +966,27 @@ Iteration 3:
 [Neuron1] [0] [Neuron3] [Neuron4] [0] [Neuron6]
 ```
 
-So if you observe on the behaviour which is presented here, you may notice that on every iteration approximately the half of the neurons have a chance to be removed from training and being replaced by the zero, which is indicated in my schema like `[0]`
+If you look at the behavior shown here, you'll notice that on every iteration roughly half the neurons have a chance of being dropped from training and replaced with zero, shown in my diagram as `[0]`.
 
-If you are wondering why we need to remove some calculation parts from our calculation steps - I can give you list of pretty unobvious reasons, which basically will explain you nothing if you read this first time. The main reason is the preventing overfitting - the behaviour of our model when it works fairly good on the training data (I hope you still remember that above we separated our dataset in two parts - training and validation), but fails on the validation data. Don’t ask how somebody discovered that exactly drop out of some computation segments from our chain works in this way - intuitively you can accept this like making the conditions of our model worthier than it might be. It’s considered that it increases the duration model and how good it predicts because it adds the element of randomicity to the process of learning. It makes sense to add that dropout works only while the learning happening, but it’s switched off when the validation takes place. 
+If you're wondering why we'd deliberately remove parts of our own computation, I could give you a list of not-so-obvious reasons that probably won't mean much on a first read. The main one is preventing overfitting - a model behaving well on training data (remember, we split our dataset into training and validation earlier) but failing on validation data. Don't ask how someone first discovered that dropping out parts of the computation chain like this actually helps; intuitively, you can think of it as deliberately making training conditions a bit harder than they need to be. It's believed to make a model more durable and better at generalizing, because it introduces an element of randomness into the learning process. Worth noting: dropout is only active during training and gets switched off during validation. 
 
 ### Invocation Dense(1, activation='sigmoid')
 
-You may remember that we have already deal with this method, when we discussed 512 neurons, weights and biases. This is the final layer of our model and this single one neuron represents the output of our neural network. Simply speaking, this item gives us some value which will give us the final answer - is this set of pixel presents a dog or cat at least ? More literally you can imagine this like the bunch of the connection lines which go from the every neurons of the previous step to the single one neuron, which is final output of our layers. 
+You'll recall we already dealt with this method when discussing the 512 neurons, weights, and biases. This is the final layer of our model, and this single neuron represents our neural network's output. Put simply, this neuron produces the value that gives us our final answer: does this set of pixels represent a dog or a cat? You can picture this as a bundle of connection lines running from every neuron in the previous layer into this one final neuron, which produces the layer's final output. 
 
-The `activation='sigmoid'` needs to be explained. Basically for this neuron we have the same story as the previous ones - we have the weighted sum of outputs (and all stories about weights to be randomly initialised and bias to be equal zero in the first iteration are the same as for previous `Dense` invocation)
+The `activation='sigmoid'` part needs some explanation. For this neuron, we have the same story as before: a weighted sum of outputs (with weights randomly initialized and bias starting at zero, just like the previous `Dense` invocation),
 
                                                   $z = \sum_{i=1}^{N} w_i x_i + b$
 
-and some activation function which is in this case not so trivial as it was in previous chapter, when we kept observing `activation='relu’` .
+followed by an activation function that's a bit less trivial than the `activation='relu'` we saw in the previous section.
 
 So this activation function looks like this:
 
                                                          $y = \sigma(z) = \frac{1}{1 + e^{-z}}$
 
-As you can the the calculated value if $y$ is always less then 1, so we can speak about probability, showing us the likelihood that given  image is dog. 
+As you can see, the calculated value $y$ always falls between 0 and 1, so we can treat it as a probability - specifically, the likelihood that the given image is a dog. 
 
-If you want to see how the visualisation of this last final layer on you own - you can try to execute this code (be careful and tolerant - execution uses real number of neurons - 6272 - so process is not flashlight):
+If you want to see a visualization of this final layer yourself, you can try running the code below (be patient - it uses the real number of neurons, 6272, so it won't be instant):
 
 ```python
 import matplotlib.pyplot as plt
@@ -1018,11 +1018,11 @@ plt.title('Visualization of Final Neuron and Connections')
 plt.show()
 ```
 
-but I can show you anyway. The legend for this schema is pretty simple: big red dot in the center is our final neuron, created by `Dense(1, activation='sigmoid')`   and the plethora of the blue points are out connections of neurons which comes from the previous step.
+But I can show you the result anyway. The legend here is simple: the big red dot in the center is our final neuron, created by `Dense(1, activation='sigmoid')`, and the many blue dots are the connections coming in from the previous layer's neurons.
 
 ![Untitled](Github%20f2c7e7b803134e089c4484d14eb5d863/Untitled%203.png)
 
-And okey - let me to congratulate you. Now we achieved pretty big milestone in understanding what this big piece of code means
+And okay - congratulations! You've just hit a pretty big milestone in understanding what this whole chunk of code means:
 
 ```python
 model = Sequential([
@@ -1041,25 +1041,25 @@ model = Sequential([
 ])
 ```
 
-So let me to give you small resume what we obtained and which memory milestones you may keep in your memory.
+Let me give you a short summary of what we've covered and the key points worth remembering.
 
 ### Resume for creation the model
 
  
 
-1. We build model in order to make Image classification
-2. We calculate nothing now yet, calculation will be done later, that’s only recipe how calculation will be done 
-3. Our model is the sequence of layers. 
-4. Big part of our layers are convolutional. It means that not all image entirely will be used for learning or what is the same is calculation process. It means that the image will be splitted for some parts, every parts will be featured by the some numeric value characteristic - so the whole image is as be convoluted or wrapped.
-5. The future calculation will be going through the first layer to the last layer gradually.
-6. Big part of our computation is the definition of the weights and biases vectors in order to make them having such values, that the final output should be pretty enough close to the 1 (if we learn using dogs) or to the 0 (if we learn using cats)
-7. In order to achieve this we will go through a plethora of iteration during which the weights and biases will be adjusted. 
+1. We built a model for the purpose of image classification.
+2. Nothing has actually been calculated yet - what we've defined so far is only the recipe for how the calculation will happen later.
+3. Our model is a sequence of layers.
+4. Most of those layers are convolutional. That means the model doesn't process the whole image as one unit - the image gets split into smaller parts, each characterized by some numeric value, so the whole image effectively gets convolved, or "wrapped up."
+5. The actual calculation will flow gradually from the first layer to the last.
+6. A large part of our computation is about finding the right values for the weight and bias vectors, so that the final output ends up close to 1 (when training on dogs) or close to 0 (when training on cats).
+7. To get there, we'll go through many iterations, adjusting the weights and biases each time.
 
-So, let’s go further!
+So, let's go further!
 
-## Preparation our model to do something useful
+## Getting Our Model Ready to Be Useful
 
-If you can see our code you can notice that we have to go to the following strings:
+Looking at our code, you'll notice we need to get to the following lines:
 
 ```python
 model.compile(loss='binary_crossentropy',
@@ -1067,25 +1067,25 @@ model.compile(loss='binary_crossentropy',
               metrics=['accuracy'])
 ```
 
-By and large if the previous step was about definition the model in general like a sequence of layers, this step is to define the certain numeric parameter which should make impact on our model. Simply speaking we define the rules how good our model will be learning and how fast it will happen. 
+By and large, if the previous step was about defining the model itself, as a sequence of layers, this step is about defining the numeric parameters that shape how it behaves. Put simply, we're setting the rules for how well our model learns, and how fast it does so. 
 
-For sure we have to consider the parameters of this invocation:
+Let's go through the parameters of this call:
 
-`loss='binary_crossentropy’`  - this loss defines how well our model matches to the labels.  This function is developed certainly for such type of image classification - I mean binary classification - and the formula of this loss looks like that (to be honest if you read this first time this part is kind of useless):
+`loss='binary_crossentropy'` - this loss function measures how well our model's predictions match the true labels. It's specifically designed for this kind of classification problem - binary classification - and its formula looks like this (to be honest, if this is your first read, this part isn't essential):
 
 $\text{Binary Crossentropy} = -\frac{1}{N} \sum_{i=1}^N \left[ y_i \log(p_i) + (1 - y_i) \log(1 - p_i) \right]$
 
-`optimizer=Adam(learning_rate=0.001)`  - basically that is what defines the parameters of changing the weights. If you remember, we had been talking about the arrays of weights and biases, which are initialised by some random values, close to zero, or just zero, if we talk about bias exactly. This parameter defines the step of changing weights during training process in order to bring the value of 
+`optimizer=Adam(learning_rate=0.001)` - this defines how the weights get updated. Remember, we talked about arrays of weights and biases initialized with random values close to zero (or exactly zero, for biases). This parameter controls the step size used when updating those weights during training, in order to push the value of 
 
 $z_j = \sum_{i=1}^{6,272} w_{ij} x_i + b_j$
 
-to be so close to 1 as possible. Adam is **Adaptive Moment Estimation**  is an optimization algorithm that combines the advantages of two other extensions of stochastic gradient descent: AdaGrad and RMSProp. It adapts the learning rate for each parameter.
+as close to 1 as possible. Adam stands for **Adaptive Moment Estimation**, an optimization algorithm that combines the advantages of two other extensions of stochastic gradient descent, AdaGrad and RMSProp. It adapts the learning rate for each parameter individually.
 
-`metrics=['accuracy']`  - this is some kind of feedback system which allow us to understand what is happening inside model during training process. You can consider this as metric which can be obtained from the model and using which we can judge how well all is going. 
+`metrics=['accuracy']` - this acts as a feedback signal, letting us see what's happening inside the model during training. You can think of it as a metric the model reports back to us, which we use to judge how well things are going. 
 
-## Do a training!
+## Time to Train!
 
-We are swiftly getting to the final stage of our goal and in the end we can see the main stage of our process:
+We're quickly approaching the final stage of our goal, and here's the main event of our whole process:
 
 ```
 # # Train the model
@@ -1098,9 +1098,9 @@ history = model.fit(
 )
 ```
 
-This is exactly the point when calculation begins. In this point our model starts to be changed (what is literally means - weights and biases are changing) and it happens not immediately of course, but during some count of iterations, which are in terms of Machine Learning named as epochs. You can notice that this is single parameter which is hardcoded here and that’s exactly the count of iteration, which through our model has to come to obtain something, which should be saved to file in oder not to repeat the learning process again and again. 
+This is exactly the point where calculation begins. From here, our model starts to actually change - meaning its weights and biases get updated - not all at once, of course, but over a number of iterations that, in Machine Learning terms, are called epochs. Notice this is a single hardcoded parameter here: it's the number of iterations our model needs to go through to produce something worth saving to a file, so we don't have to repeat the whole training process every time. 
 
-Let me to remind you what `train_generator` is:
+Let me remind you what `train_generator` is:
 
 ```
 train_generator = train_datagen.flow_from_directory(
@@ -1122,11 +1122,11 @@ validation_generator = validation_datagen.flow_from_directory(
 )
 ```
 
-So both of them are objects which have our images prepared for training by the reading then from directories. 
+So both of these are objects that have our images ready for training, by reading them from the corresponding directories. 
 
-We need to achieve the comprehension what `steps_per_epoch=steps_per_epoch` and `validation_steps=validation_steps`  are. 
+We still need to understand what `steps_per_epoch=steps_per_epoch` and `validation_steps=validation_steps` actually are. 
 
-Let me to add the snapshot:
+Here's a snippet:
 
 ```python
 # # Calculate steps_per_epoch and validation_steps
@@ -1134,9 +1134,9 @@ steps_per_epoch = train_generator.samples // train_generator.batch_size
 validation_steps = validation_generator.samples // validation_generator.batch_size
 ```
 
-Checking this code we may to notice, that the values, which we are interesting in, are the result of division the some properties of the corresponding objects. 
+Looking at this code, you'll notice that the values we're interested in are the result of dividing two properties of the corresponding objects. 
 
-Actually we may leave this as is, but because we’d like delve in all this things, it makes sense to open this secret as well. Earlier we defined two objects: 
+We could just leave it at that, but since we like digging into these details, let's uncover this one too. Earlier, we defined two objects: 
 
 ```python
 train_datagen = ImageDataGenerator(
@@ -1151,43 +1151,43 @@ train_datagen = ImageDataGenerator(
 )
 ```
 
-and more simple:
+and a simpler one:
 
 ```python
 validation_datagen = ImageDataGenerator(rescale=1./255)
 ```
 
-If you run out script you may to see that in console two strings which on my laptop look like that:
+If you run our script, you'll see two lines printed to the console, which on my laptop look like this:
 
 `Found 24998 images belonging to 2 classes.
 Found 23652 images belonging to 2 classes.`
 
-The number, which we can see in the first line, is the amount of files, loaded by `train_datagen` and which are stored in `train_generator.samples` . Absolutely the same we can see about the second line, but only for `validation_datagen` . You can put some efforts and count if you want, but in more literal sense it is the number of files on out dataset, in the training and validation datasets correspondingly. And because the our training process will be not the one by one files, but by the some batch, we can easily conclude that the batch size is 20, what exactly we can see in our logs - not because Keras defaults to that value (its own default is actually 32), but because we explicitly passed `batch_size=20` to `flow_from_directory()` above. 
+The number in the first line is the count of files loaded by `train_datagen`, stored in `train_generator.samples`. The second line shows the same thing, but for `validation_datagen`. You could count the files yourself if you wanted, but more simply, these are just the number of files in our training and validation datasets, respectively. And since our training process doesn't process files one at a time but in batches, we can see the batch size reflected in the logs as 20 - not because Keras defaults to that value (its actual default is 32), but because we explicitly passed `batch_size=20` to `flow_from_directory()` above. 
 
 **A note on the numbers above:** `24998 + 23652 = 48650`, which is almost *double* the roughly 25,000 images (12,500 cats + 12,500 dogs) in the raw dataset, and the ratio between the two (~51/49) doesn't look like the 80/20 split the code performs. This particular log was captured before the split step cleared out `dataset/train` and `dataset/validation` before repopulating them - since those folders weren't cleared, and the shuffle has no fixed seed, running the split more than once let files pile up across runs, and could even let the same image drift into both `train` and `validation` on different runs. With the folders cleared before every run (see the earlier code block), a single clean run should instead give you something close to an actual 80/20 split - roughly 20,000 files in `train` and 5,000 in `validation` for a ~25,000-image dataset.
 
-So as result we can print out the following values:
+As a result, we can print out the following values:
 
 `train_generator.samples : 24998
 train_generator.batch_size : 20
 Steps per epoch: 1249
 Validation steps: 1182`
 
-and move further. 
+and move on. 
 
-## The learning and the its results
+## Training and Its Results
 
-First of all, be patient. This process is not fast. Depending of your computer - I’m doing this code and article on Macbook Pro M3 Pro - it really takes time. Moreover, we have to care about the results of our computational process, really because this costs some time and if before image classification we would start the training process every time, we easily would have been identified as useless resource consumer. So we’re going to save something which is result of our work to the dedicated file with extension `h5` in order to you will be able to use the results of learning process in another script. 
+First of all, be patient - this process isn't fast. Depending on your computer (I ran this code, and wrote this article, on a MacBook Pro M3 Pro), it really does take a while. On top of that, we need to hold onto the results of this computation, because it's expensive: if we had to retrain the model from scratch every time we wanted to classify an image, we'd rightly be called wasteful. So instead, we're going to save the result of our work to a dedicated `.h5` file, so you can reuse the trained model from another script. 
 
-So when our weights and biases will be pretty close to 1 or 0 after the learning will be finished, we do such thing in our code:
+Once training is finished and our weights and biases have settled into values that push the output close to 1 or 0, we do this in our code:
 
 ```python
 model.save('cats_vs_dogs.h5')
 ```
 
-Let me repeat - this is exactly what we need. This is the sequence of some maps with averaged images of either dogs or cats, with which the image which has to be classified in some particular case,  will be compared. 
+Let me repeat - this is exactly what we need. It's a set of feature maps, effectively capturing averaged characteristics of dogs and cats, against which any new image we want to classify will be compared. 
 
-So that’s time to launch our script and see what’s is happening. I really hope if you read till this moment, you are able to launch Python code, so let me to skip this step. One thing which has to be mentioned here, if you have never done such things before - it takes time and looks like that. 
+So it's time to launch our script and see what happens. I really hope that if you've read this far, you're already able to run Python code, so I'll skip explaining that step. One thing worth mentioning if you've never done this before: it takes time, and looks something like this. 
 
 ```python
 Epoch 1/30
@@ -1213,27 +1213,27 @@ Epoch 3/30
 `lib/python3.12/site-packages/keras/src/trainers/data_adapters/py_dataset_adapter.py:121: UserWarning: Your PyDataset class should call super().__init__(**kwargs) in its constructor. **kwargs can include workers, use_multiprocessing, max_queue_size. Do not pass these arguments to fit(), as they will be ignored.
 self._warn_if_super_not_called())` )
 
-If you read your output meticulously you may to notice that your calculation process is separated in some iterations, named `epochs`   and count of such epochs is `30` as we did this on our own in our code above. Also you can see warnings: actually process of training is pretty fragile and can be interrupted by the several reasons, but because of our case is relatively simple, I dare it won’t happen. By the way, this is one of the few amount of tasks when I can hear the fans of my Macbook Pro M3 Pro. 
+If you read your output carefully, you'll notice the calculation is broken up into iterations called `epochs`, and there are `30` of them, exactly as we set in our code above. You'll also see some warnings - the training process is actually fairly fragile and can be interrupted for several reasons, though in our relatively simple case, I doubt it will be. By the way, this is one of the few tasks that actually makes me hear my MacBook Pro M3 Pro's fans spin up. 
 
-But there is another interesting moment which we need to discuss - in logs you can find the string like that
+But there's another interesting detail worth discussing - in the logs, you'll find a line like this:
 
 `accuracy: 0.5008 - loss: 0.6947 - val_accuracy: 0.4991 - val_loss: 0.6931`
 
-And it really makes sense to talk about this, but believe me, it would be much better if you wait till the end of your training process and you can extract in some way this string to have the all output with this data. Observing the values we can extract several very alluring details. 
+It's worth talking about this, but it's much better to wait until the end of your training run and pull out the full set of these lines from your output. Looking at these values, we can pick out several interesting details. 
 
-Let’s discuss what do we have here. First of all there are pairs: accuracy and loss for two types of data - training and validation. The prefix `val_` in this case indicates that we are dealing with validation data.
+Let's break down what we have here. First, there are pairs of accuracy and loss, one for each type of data - training and validation. The `val_` prefix indicates we're looking at validation data.
 
-So having this example - what do we have ?
+So, looking at this example - what do we have?
 
-**accuracy: 0.5008** - accuracy of training data for the current epoch, in my case this is first epoch, so the first one iteration of our learning process. The value 0.5008 means that our model is able to classify correctly approximately 50.08% of training samples. Not so good yet, frankly speaking.
+**accuracy: 0.5008** - the training accuracy for the current epoch (the first one, in this case - the very first iteration of learning). A value of 0.5008 means the model correctly classifies about 50.08% of training samples. Not great yet, frankly.
 
-**loss: 0.6947** - The loss of our model for current epoch, in my case for the first one as well of course. This is basically metric which shows us how well our model match to actual labels. Lower loss indicates better state of things. In our case we’d like to expect more since it’s only the first step - or the epoch 1.
+**loss: 0.6947** - the model's loss for this same epoch. It's a metric showing how well the model's predictions match the actual labels; lower loss is better. Since this is only epoch 1, we shouldn't expect much yet.
 
-Another part of logs has the same sense, but only applicable to validation data. 
+The rest of the log line follows the same logic, just for validation data. 
 
-It doesn’t make sense to check out logs of our script to understand the evaluation of our model, because of after the model will be saved, we will try to build the plot to understand how well our model works. 
+It's not very useful to eyeball the raw logs to judge how well our model performs. Instead, once the model is saved, we'll build a plot to understand that. 
 
-The plot will be built by this code, which is  pretty universal (in terms that this will be regular 2D-plot) and doesn’t related directly to machine learning, so I will let myself not to describe it in details. 
+The plot is built with this code, which is pretty generic (just a standard 2D plot) and isn't specific to machine learning, so I won't go into detail describing it. 
 
 ```
 # Evaluate the model
@@ -1259,23 +1259,23 @@ plt.legend()
 plt.show()
 ```
 
-So when you learning process will be finished you have to see something like that - two plots will opened automatically. The first one is describing the accuracy of classification, the second one describe the loss, with which this classification happens.
+Once your training process finishes, you should see something like this: two plots open automatically. The first shows classification accuracy; the second shows the loss associated with that classification.
 
 ![Screenshot 2024-08-01 at 22.41.32.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-08-01_at_22.41.32.png)
 
 ![Screenshot 2024-08-01 at 22.43.13.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-08-01_at_22.43.13.png)
 
-It makes sense to discuss the both plots in details.
+Let's discuss both plots in detail.
 
-1.	**X-Axis**: Epochs (from 0 to 30) Each point on the X-axis represents one epoch, which is one complete pass through the entire training dataset.
+1. **X-Axis**: Epochs (from 0 to 30). Each point on the X-axis represents one epoch - one complete pass through the entire training dataset.
 
-2.	**Y-Axis**: Accuracy (ranging from 0.5 to 1.0) This measures how accurately the model is able to classify the training and validation data.
+2. **Y-Axis**: Accuracy (ranging from 0.5 to 1.0). This measures how accurately the model classifies the training and validation data.
 
-First of all, if you can see the first plot with accuracy, you may notice that training accuracy slightly increases, right ? Of course, there are several very distinguished fluctuations (I mean the blue points which are laying pretty far away from the curve, which can be drawn through the majority of points), but by and large we can make the conclusion that, in spite of our dataset is fairly primitive and count of training epoch are restricted by 30, our accuracy increases and at the last position we can evaluate her value which is pretty close to 0.9. Shortly speaking, it’s well. 
+First, looking at the accuracy plot, you'll notice training accuracy trends upward, right? Sure, there are a few noticeable outliers (blue points sitting noticeably far from the general curve), but overall, we can conclude that - despite our fairly simple setup and only 30 training epochs - accuracy keeps climbing, ending up close to 0.9. In short: that's good. 
 
-The situation with validation accuracy is more difficult. The fluctuations are more prominent, but in general we can conditionally to say that validation accuracy increases as well, but with much less quality. 
+The picture for validation accuracy is messier. The fluctuations are more pronounced, but broadly speaking, we can still say validation accuracy trends upward too - just less consistently. 
 
-The combination of these two observations (relatively good training accuracy and much less quality of validation accuracy with prominent fluctuation) allows to suspect that the model is overfitted by the training data. It means that model works relatively well with training data, even if it contains the noise, but when the model tries to apply herself to the validation data the thing are getting worth. In general in well-trained model we should not to observe such state of things and in ideal world we have to apply the additional steps to enhance it. The enhancing may include more files of dogs and cats for training, the manipulation with layer’s count of our neural network or/and manipulation with parameters of these layers. Simply speaking, it’s about changing the count of layers and numeric parameters here:
+Together, these two observations - relatively good training accuracy alongside noisier, weaker validation accuracy - suggest the model is overfitting to the training data. In other words, it does reasonably well on training data (even the noisy parts), but performs worse when applied to validation data it hasn't seen in quite the same way. A well-trained model shouldn't show this pattern, and ideally we'd take additional steps to fix it - adding more training images, adjusting the number of layers in our network, and/or tuning their parameters. In practice, that means changing the layer count and numeric parameters here:
 
 ```python
 model = Sequential([
@@ -1294,29 +1294,29 @@ Dense(1, activation='sigmoid')
 ])
 ```
 
-### Verify how well we are
+### Checking How Well We Did
 
-Of course, when we have trained our model and even we have the results of our training process, you would like to test at least what we get. We can do this in separated script, which implements several goals:
+Of course, once we've trained our model and have the results of that process, we naturally want to try it out. We can do that with a separate script, which handles a few things:
 
-1. accepts file to be classified whether it is cat or dog
-2. loads our trained model
-3. actually classification 
+1. accepting a file to classify as cat or dog
+2. loading our trained model
+3. actually running the classification
 
-Let me to emphasise one more time that learning process will be done once time only (if you don’t want to make experiments with epoch counts for example or any another parameters) and for every new invocation of our classifier we will be using the already trained model, which will be saved in file by this code:
+Let me emphasize once more: training only needs to happen once (assuming you're not experimenting with different epoch counts or other parameters), and every subsequent time we run our classifier, we'll reuse the already-trained model that gets saved to a file by this code:
 
 ```python
 model.save('cats_vs_dogs.h5')  
 ```
 
-In order to let you feel what do we have, saying “trained model”, I can show you how it looks like. If you check out the size of our dataset (you downloaded him from Microsoft’s site in the beginning of our trip), you can find out that it will be around `1 673 718 106 bytes (1,77 GB on disk)`   - of course, in my case. 
+To give you a sense of what we mean by "trained model," let me show you how it actually looks. If you check the size of our dataset (which you downloaded from Microsoft’s site at the start of this journey), you'll find it comes out to around `1,673,718,106 bytes (1.77 GB on disk)` - in my case, at least. 
 
-So the file of trained model has the following size:
+So the file of our trained model has the following size:
 
 ![Screenshot 2024-07-31 at 22.31.50.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-07-31_at_22.31.50.png)
 
-You can effortlessly notice that sizes of data set (image files) and trained models are different drastically. The one of the reason of that we applied the convolutional approach which is able to wrap our data significantly and of course we averaged and remove a lot of extra information from files, which are not needed for image classification. 
+You'll immediately notice that the dataset's size (raw image files) and the trained model's size are wildly different. One reason for that is the convolutional approach we used, which compresses our data significantly - along with the fact that we've averaged out and discarded a lot of information from the original files that isn't needed for classification. 
 
-This file is binary to be maximally efficient, but basically you can open it and check the content if you want, but, frankly speaking, you cannot extract something useful from this data: 
+This file is binary, for maximum efficiency, but you're free to open it and poke around if you like - though, frankly, you won't find anything useful in there: 
 
 ![Screenshot 2024-07-31 at 22.36.31.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-07-31_at_22.36.31.png)
 
@@ -1352,21 +1352,21 @@ def predict_image(img_path):
 predict_image('KITTEN-WITH-A-MOUSE-150x150.jpg')
 ```
 
-Since I believe if you read this and moreover you read till this place, you have a least small experience in developing and I don’t need to explain you what is happening in this code. 
+Since you've made it this far, I'm confident you have at least a bit of development experience, so I won't walk through what's happening in this code. 
 
-Let me just describe my scenario of verification, which can be applied to verify how well we learned our model.
+Let me just walk through the verification steps I used to check how well our model actually learned.
 
-First of all I will take a image from training data folder and of course I will put the name of this file as parameter of method `predict_image()` . So what do I have, putting the image from the /cat folder - small nondescriptive label “This is cat” is telling me that, it looks like, our weights and biases works relatively well in this case. 
+First, I'll grab an image from the training data folder and pass its filename to `predict_image()`. Using an image from the `/cat` folder, the simple output "This is a cat" tells me our weights and biases are apparently working relatively well in this case. 
 
 ![Screenshot 2024-08-02 at 22.37.03.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-08-02_at_22.37.03.png)
 
-But let’s go further and suggest to identify whether it is dog - and it will be, sure. Let me to show the result on my side:
+Let's go further and try to identify a dog image - and it should say "dog," of course. Here's the result on my end:
 
 ![Screenshot 2024-08-02 at 22.41.13.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-08-02_at_22.41.13.png)
 
-As you can see the model was right again - the file really represents dogs. So it seems again that …. No, let’s have a real test, using real image from internet. I’m going to show whole process on my side.
+As you can see, the model got it right again - the file really does show a dog. So it seems like... no, let's do a real test with an actual image from the Internet. I'll walk through the whole process.
 
-This is my result of Google Images search and I’m suggesting to our model to identify what is on the first image, without any edit with downloaded images.
+Here's a Google Images search I ran, and I'm asking our model to identify what's in the first image, with no edits made to the downloaded picture.
 
 ![Screenshot 2024-08-02 at 22.43.00.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-08-02_at_22.43.00.png)
 
@@ -1374,37 +1374,37 @@ As you can see the model is right again!
 
 ![Screenshot 2024-08-02 at 22.46.56.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-08-02_at_22.46.56.png)
 
-Let’s try something new - with another background or just noice. I’m going to use cat from Google Search again and which exactly I bordered it by the red box.
+Let's try something new: a busier background, some visual noise. I'll use a cat image from Google Search again, the one outlined with a red box below.
 
 ![Screenshot 2024-08-02 at 22.51.49.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-08-02_at_22.51.49.png)
 
-Interesting! It still works! So now is the time to propose something really strange:
+Interesting - it still works! Now let's try something really strange:
 
 ![Screenshot 2024-08-02 at 22.53.17.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-08-02_at_22.53.17.png)
 
-So these combination of pixels, despite of out plots, which may bring doubt, still can be identified as a cat by our model.
+So even this odd combination of pixels - despite what our earlier plots might have led us to doubt - still gets correctly identified as a cat by our model.
 
 ![Screenshot 2024-08-02 at 22.58.34.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-08-02_at_22.58.34.png)
 
-So that’s good time to check what about dogs ? 
+Good time to check the same thing for dogs, then?
 
 ![Screenshot 2024-08-05 at 21.46.45.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-08-05_at_21.46.45.png)
 
-So …. it might seem strange, but it still works! 
+So... it might sound strange, but it still works! 
 
 ![Screenshot 2024-08-05 at 21.50.09.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-08-05_at_21.50.09.png)
 
-OK, I hope it’s pretty understandable how you can test your trained model to make the simplest but really working image classification.
+OK, I hope it's now pretty clear how you can test your trained model to build the simplest, but genuinely working, image classifier.
 
 ## Conclusion
 
-Thank you if you read till this point, it means that this trip was interesting as it was for me. Personally for me, when I was thinking about whether should I put some attention to such hype topic as machine learning, it seemed to me like some sort of magic, but it reality it’s been realised that approximately 80% of what called “machine learning” is part of almost every course of discrete math and relatively small part is really founded on probabilistic methods, which are hardly learned in non-mathematical university courses.  
+Thank you for reading this far - it means this journey was as interesting for you as it was for me. Personally, when I was deciding whether to pay attention to a hyped-up topic like machine learning, it felt like some kind of magic. In reality, though, I came to realize that roughly 80% of what's called "machine learning" is stuff covered in almost any discrete math course, and only a relatively small part is genuinely rooted in probabilistic methods that are rarely taught outside math-focused university programs.  
 
-So small resume what it make sense to have as milestones in you memory:
+So, here's a short recap of the key takeaways worth remembering:
 
-1. We need to have the datasets if we want to “learn” our model.
-2. This dataset should be separated in two parts - for training and validation.
-3. Neural networks is layered structure which process the set of pixel of particular image in some canny way. 
-4. The learning process is the iteration process, because the set of coefficients and errors, names the weights and biases correspondingly, should be adjusted in order to meet the expectation of our model. 
-5. Main idea of learning is the generalisation of images to abstract structure, which keeps the combinations of pixel, which, after learning, identify the objects which we’re trying to classify.
-6. How all this was discovered and was realized - it is absolutely another story.
+1. We need a dataset if we want to "teach" our model anything.
+2. That dataset should be split into two parts - training and validation.
+3. A neural network is a layered structure that processes an image's pixels in some structured way.
+4. Learning is an iterative process, because the sets of coefficients - the weights and biases - need to be adjusted repeatedly to meet our model's expectations.
+5. The core idea of learning is generalizing images into an abstract structure that captures the combinations of pixels needed to identify the objects we're trying to classify.
+6. How all of this was originally discovered is an entirely different story.
