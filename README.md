@@ -27,7 +27,7 @@ After the archive will be downloaded it makes sense to investigate what we get b
 
 ![Screenshot 2024-06-23 at 14.56.35.png](Github%20f2c7e7b803134e089c4484d14eb5d863/Screenshot_2024-06-23_at_14.56.35.png)
 
-Sure, if you check what every directory contains you will the list of jpg-files. At the moment when I’m writing this archive contains 12502 images of cats and dogs of the each. 
+Sure, if you check what every directory contains you will the list of jpg-files. At the moment when I’m writing this archive contains 12500 images of cats and dogs of the each. 
 
 *The snag is that one of these file is broken apparently, but it will be accounted during the writing code of out classification script.* 
 
