@@ -354,7 +354,7 @@ Obviously that `train_dir` is the directory’s name from which the method is go
 
 You may comprehend this like manual association of some property (which is named as label in Machine Learning) from the space (0;1) to every images and it implies that after the method will complete his job, we will have the labeled dataset.
 
-You way be wondering how it works. So method  will run through the `train_dir` and will fetch the names of the subdirectories, obtaining obviously `[’cat’, ‘dogs’]` . After that this array will be alphabetically ordered and for the first name **0** will be associated and for the second one, for sure, the label will be **1**. As result we have the binary-labeled dataset. Lucky case that we have only two animals to classify - for sure, if we were have more than two, we would have been do something more complicated. 
+You way be wondering how it works. So method  will run through the `train_dir` and will fetch the names of the subdirectories, obtaining obviously `['cats', 'dogs']` . After that this array will be alphabetically ordered and for the first name **0** will be associated and for the second one, for sure, the label will be **1**. As result we have the binary-labeled dataset. Lucky case that we have only two animals to classify - for sure, if we were have more than two, we would have been do something more complicated. 
 
 ### Coming closer to neural network
 
